@@ -2,6 +2,8 @@ var gulp = require('gulp');
 
 var jshint = require('gulp-jshint');
 var connect = require('gulp-connect');
+var sass = require('gulp-sass');
+var neat = require('node-neat');
 var uglify = require('gulp-uglify');
 var minifyHTML = require('gulp-minify-html');
 var concat = require('gulp-concat');
@@ -38,6 +40,17 @@ gulp.task('scripts', function() {
     .pipe(gulp.dest('build/js'));
 });
 
+// Styles build task, concatenates all the files
+gulp.task('styles', function() {
+  return gulp.src('./app/scss/*.scss')
+    .pipe(sass({
+      includePaths: require('node-neat').includePaths
+    }))
+    .pipe(minifyCss({compatibility: 'ie8'}))
+    .pipe(concat('styles.css'))
+    .pipe(gulp.dest('build/scss'));
+});
+
 // JavaScript linting task
 gulp.task('jshint', function() {
   return gulp.src('./app/js/*.js')
@@ -48,8 +61,9 @@ gulp.task('jshint', function() {
 gulp.task('watch', ['build'], function() {
   gulp.watch('./app/*.html', ['build'] );
   gulp.watch('./app/js/**/*.js', ['build']);
+  gulp.watch('./app/scss/*.scss', ['build']);
 });
 
 gulp.task('default', ['connect', 'watch', 'jshint']);
 
-gulp.task('build', ['html', 'vendor', 'scripts', 'jshint', 'connect']);
+gulp.task('build', ['html', 'vendor', 'scripts', 'jshint', 'styles']);

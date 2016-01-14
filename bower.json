@@ -17,5 +17,8 @@
   ],
   "devDependencies": {
     "lumx": "~0.3.96"
+  },
+  "resolutions": {
+    "mdi": "1.2.65"
   }
 }
