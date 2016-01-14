@@ -1,1 +1,1 @@
-angular.module("StarWarsApp",["lumx"]).controller("hello",["$scope",function(l){l.name="Tim"}]);
+angular.module("StarWarsApp",["lumx"]).controller("test",["$scope","$http","PeopleFactory",function(o,t,e){o.name="Tim",e().then(function(t){o.people=t.data.results,console.log(o.people)},function(o){console.log(o)})}]),angular.module("StarWarsApp").factory("PeopleFactory",["$http",function(o){return function(t){return o.get("http://swapi.co/api/people/")}}]);
