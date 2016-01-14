@@ -1,0 +1,1 @@
+angular.module("StarWarsApp",["lumx"]).controller("hello",["$scope",function(l){l.name="Tim"}]);

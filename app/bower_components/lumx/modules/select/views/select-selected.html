@@ -1,0 +1,22 @@
+<div lx-dropdown-toggle>
+    <span class="lx-select__floating-label" ng-if="lxSelectGetSelectedElements().length !== 0 && lxSelectFloatingLabel" ng-bind-html="lxSelectTrust(lxSelectPlaceholder)"></span>
+
+    <div class="lx-select__selected"
+         ng-class="{ 'lx-select__selected--is-unique': !lxSelectMultiple,
+                     'lx-select__selected--is-multiple': lxSelectMultiple && lxSelectGetSelectedElements().length > 0,
+                     'lx-select__selected--placeholder': lxSelectGetSelectedElements().length === 0 }"
+         lx-ripple>
+        <span ng-if="lxSelectGetSelectedElements().length === 0" ng-bind-html="lxSelectTrust(lxSelectPlaceholder)"></span>
+
+        <div ng-if="!lxSelectMultiple && lxSelectGetSelectedElements().length === 1">
+            <i class="lx-select__close mdi mdi-close-circle" ng-click="lxSelectUnselect($selected, $event)" ng-if="lxSelectAllowClear"></i>
+            <span ng-transclude="child"></span>
+        </div>
+
+        <div ng-if="lxSelectMultiple">
+            <div class="lx-select__tag" ng-repeat="$selected in lxSelectGetSelectedElements()">
+                <span ng-transclude="child"></span>
+            </div>
+        </div>
+    </div>
+</div>
