@@ -1,12 +1,12 @@
 angular.module('StarWarsApp', ['lumx'])
 	.controller('test', ['$scope', '$http', 'PeopleFactory', function($scope, $http, PeopleFactory){
-		$scope.name = 'Tim';
 
-		PeopleFactory()
-            .then(function(response){
-                $scope.people = response.data.results;
-                console.log($scope.people);
-            }, function(error){
-                console.log(error);
-            });
+		PeopleFactory.getPeople(function(err, people) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.people = people;
+            console.log(people);
+        });
+         
 	}]);
