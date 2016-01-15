@@ -36,7 +36,7 @@ gulp.task('vendor', function() {
 gulp.task('scripts', function() {
   return gulp.src('./app/js/**/*')
     .pipe(concat('app.js'))
-    .pipe(uglify())
+    //.pipe(uglify())
     .pipe(gulp.dest('build/js'));
 });
 

@@ -8,6 +8,15 @@ angular.module('StarWarsApp')
 			return titledString;
 		}
 
+		function getHomeworld(url, index, people){
+			$http.get(url).then(function(response){
+				people[index].homeworld = response.data.name;
+			}, function(){
+				people[index].homeworld = "error";
+			});
+		}
+		
+
 		return {
 			getPeople: function(callback)	{
 				$http.get('http://swapi.co/api/people/')
@@ -22,8 +31,9 @@ angular.module('StarWarsApp')
 								skin_color: titleCase(peopleResponse[x].skin_color),
 								gender: titleCase(peopleResponse[x].gender),
 								height: peopleResponse[x].height + "cm",
-								mass: peopleResponse[x].mass + "kg"
+								mass: peopleResponse[x].mass + "kg",
 							};
+							getHomeworld(peopleResponse[x].homeworld, x, people);
 						}
             			callback(null, people);
             	}, function(err) {
