@@ -1,12 +1,7 @@
 angular.module('StarWarsApp')
-	.factory('characterFactory', ['$http', function($http){
-		function titleCase(string){
-			var titledString = string.replace(/\b(\w)/g, function(letter){
-				return letter.toUpperCase();
-			});
+	.factory('characterFactory', ['$http', 'titleCase', function($http, titleCase){
 
-			return titledString;
-		}
+		console.log(titleCase);
 
 		function getHomeworldName(url, index, people){
 			$http.get(url).then(function(response){

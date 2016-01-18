@@ -40,7 +40,7 @@ gulp.task('vendor', function() {
 
 // combine and minify js files
 gulp.task('scripts', function() {
-  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js'])
+  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/js/*.js'])
     .pipe(concat('app.js'))
     //.pipe(uglify())
     .pipe(gulp.dest('build'));
@@ -71,7 +71,7 @@ gulp.task('jshint', function() {
 
 gulp.task('watch', ['build'], function() {
   gulp.watch('./app/**/*.html', ['build'] );
-  gulp.watch(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js'], ['build']);
+  gulp.watch(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/js/*.js'], ['build']);
   gulp.watch('./app/assets/scss/*.scss', ['build']);
   gulp.watch('./app/assets/img/*', ['build']);
 });
