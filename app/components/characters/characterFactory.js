@@ -1,38 +1,35 @@
-angular.module('StarWarsApp', ['lumx'])
-	.controller('test', ['$scope', '$http', 'PeopleFactory', function($scope, $http, PeopleFactory){
-
-		PeopleFactory.getPeople(function(err, people) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.people = people;
-            console.log(people);
-        });
-         
-	}]);
 angular.module('StarWarsApp')
-	.factory('PeopleFactory', ['$http', function($http){
+	.factory('characterFactory', ['$http', function($http){
 		function titleCase(string){
-			var titledString = string.replace(/\b(\w)/g, function capitalize(letter){
+			var titledString = string.replace(/\b(\w)/g, function(letter){
 				return letter.toUpperCase();
 			});
 
 			return titledString;
 		}
 
-		function getHomeworld(url, index, people){
+		function getHomeworldName(url, index, people){
 			$http.get(url).then(function(response){
 				people[index].homeworld = response.data.name;
 			}, function(){
 				people[index].homeworld = "error";
 			});
 		}
+
+		function getFilmNames(url, index, people){
+			$http.get(url).then(function(response){
+				people[index].films = response.title;
+			}, function(){
+				people[index].films = "error";
+			});
+		}
 		
 
 		return {
-			getPeople: function(callback)	{
+			getCharacters: function(callback)	{
 				$http.get('http://swapi.co/api/people/')
 					.then(function(response) {
+						console.log(response);
 						var peopleResponse = response.data.results;
 						var people = [];
 						for (x = 0; x < peopleResponse.length; x++){
@@ -45,12 +42,12 @@ angular.module('StarWarsApp')
 								height: peopleResponse[x].height + "cm",
 								mass: peopleResponse[x].mass + "kg",
 							};
-							getHomeworld(peopleResponse[x].homeworld, x, people);
-						}
-            			callback(null, people);
-            	}, function(err) {
-            		callback(err);
-            	});
+							getHomeworldName(peopleResponse[x].homeworld, x, people);
+						} // end for loop
+						callback(null, people);
+					}, function(err) {
+						callback(err);
+				});
 			}
 		};
 	}]);

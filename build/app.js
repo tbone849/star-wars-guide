@@ -1,5 +1,18 @@
+angular.module('StarWarsApp', ['lumx']);
 angular.module('StarWarsApp')
-	.factory('PeopleDetailsFactory', ['$http', function($http){
+	.controller('characterController', ['$scope', '$http', 'characterFactory', function($scope, $http, characterFactory){
+
+		characterFactory.getCharacters(function(err, people) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.people = people;
+            console.log(people);
+        });
+         
+	}]);
+angular.module('StarWarsApp')
+	.factory('characterFactory', ['$http', function($http){
 		function titleCase(string){
 			var titledString = string.replace(/\b(\w)/g, function(letter){
 				return letter.toUpperCase();
@@ -26,7 +39,7 @@ angular.module('StarWarsApp')
 		
 
 		return {
-			getPerson: function(callback)	{
+			getCharacters: function(callback)	{
 				$http.get('http://swapi.co/api/people/')
 					.then(function(response) {
 						console.log(response);

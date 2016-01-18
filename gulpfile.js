@@ -26,44 +26,56 @@ gulp.task('html', function(){
     .pipe(gulp.dest('build'));
 });
 
+gulp.task('html-partials', function(){
+  return gulp.src('app/components/**/*.html')
+    .pipe(minifyHTML())
+    .pipe(gulp.dest('build/components'));
+});
+
 // send vendor js files to build
 gulp.task('vendor', function() {
-  return gulp.src('./app/bower_components/**/*')
-    .pipe(gulp.dest('build/bower_components'));
+  return gulp.src('./app/assets/libs/**/*')
+    .pipe(gulp.dest('build/assets/libs'));
 });
 
 // combine and minify js files
 gulp.task('scripts', function() {
-  return gulp.src('./app/js/**/*')
+  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js'])
     .pipe(concat('app.js'))
     //.pipe(uglify())
-    .pipe(gulp.dest('build/js'));
+    .pipe(gulp.dest('build'));
 });
 
 // Styles build task, concatenates all the files
 gulp.task('styles', function() {
-  return gulp.src('./app/scss/*.scss')
+  return gulp.src('./app/assets/scss/*.scss')
     .pipe(sass({
       includePaths: require('node-neat').includePaths
     }))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('styles.css'))
-    .pipe(gulp.dest('build/scss'));
+    .pipe(gulp.dest('build/assets/css'));
+});
+
+gulp.task('images', function(){
+  return gulp.src('./app/assets/img/*')
+    .pipe(gulp.dest('build/assets/img'));
 });
 
 // JavaScript linting task
 gulp.task('jshint', function() {
-  return gulp.src('./app/js/*.js')
+  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
 
 gulp.task('watch', ['build'], function() {
-  gulp.watch('./app/*.html', ['build'] );
-  gulp.watch('./app/js/**/*.js', ['build']);
-  gulp.watch('./app/scss/*.scss', ['build']);
+  gulp.watch('./app/**/*.html', ['build'] );
+  gulp.watch(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js'], ['build']);
+  gulp.watch('./app/assets/scss/*.scss', ['build']);
+  gulp.watch('./app/assets/img/*', ['build']);
 });
 
 gulp.task('default', ['connect', 'watch', 'jshint']);
 
-gulp.task('build', ['html', 'vendor', 'scripts', 'jshint', 'styles']);
+gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'images']);
