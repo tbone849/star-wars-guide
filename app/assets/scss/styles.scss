@@ -9,7 +9,29 @@ html {
     src: url('../fonts/Starjedi.ttf');
 }
 
+@font-face {
+    font-family: 'jedi-outline';
+    src: url('../fonts/Starjhol.ttf');
+}
+
+@font-face {
+    font-family: 'jedi-subtitle';
+    src: url('../fonts/Typo Grotesk Demo.otf');
+}
+
+.logo {
+	text-align: center;
+}
+
 .title {
-	font-family: "jedi";
-	font-size: 2em;
+	font-family: "jedi-outline";
+	font-size: 6em;
+}
+
+.subtitle {
+	font-family: "jedi-subtitle";
+	letter-spacing: .75em;
+	color: $white;
+	margin-top: -1em;
+	margin-bottom: -2em;
 }
