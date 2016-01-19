@@ -3,25 +3,44 @@ angular.module('StarWarsApp')
 
 		var pageNumber = 1;
 		var people = [];
+		var getMass = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value + 'kg';
+		};
+
+		var getHeight = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value + 'cm';
+		};
 
 		return {
-			getAllCharacters: function(callback)	{
+			getAll: function(callback)	{
 				console.log('function called');
 				$http.get('http://swapi.co/api/people/?page=' + pageNumber)
 					.then(function(response) {
 						var peopleResponse = response.data.results;
-						var totalPeople = people.length;
-						for (x = 0; x < peopleResponse.length; x++){
-							people[x + totalPeople] = {
-								name: peopleResponse[x].name,
-								birth_year: peopleResponse[x].birth_year,
-								hair_color: titleCase(peopleResponse[x].hair_color),
-								skin_color: titleCase(peopleResponse[x].skin_color),
-								gender: titleCase(peopleResponse[x].gender),
-								height: peopleResponse[x].height + "cm",
-								mass: peopleResponse[x].mass + "kg"
+						var newPeople = [];
+
+						newPeople = peopleResponse.map(function(value){
+							return {
+								name: titleCase(value.name),
+								birth_year: value.birth_year,
+								hair_color: titleCase(value.hair_color),
+								skin_color: titleCase(value.skin_color),
+								gender: titleCase(value.gender),
+								height: getHeight(value.height),
+								mass: getMass(value.mass)
 							};
-						} // end for loop
+						});
+
+						people.push.apply(people, newPeople);
+
 						pageNumber++;
 						callback(null, people);
 					}, function(err) {
@@ -29,12 +48,12 @@ angular.module('StarWarsApp')
 				});
 			},
 
-			getCharacterByUrl: function(callback, url){
+			getByUrl: function(url, callback){
 				$http.get(url).then(function(response){
 					var character = {
 						name: response.name,
-						height: response.height + 'cm',
-						mass: response.mass + 'kg',
+						height: getHeight(response.height),
+						mass: getMass(response.mass),
 						hair_color: titleCase(response.hair_color),
 						skin_color: titleCase(response.skin_color),
 						gender: titleCase(response.gender)

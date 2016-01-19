@@ -1,7 +1,7 @@
 angular.module('StarWarsApp')
 	.controller('characterController', ['$scope', '$http', 'characterFactory', function($scope, $http, characterFactory){
 
-		characterFactory.getAllCharacters(function(err, people) {
+		characterFactory.getAll(function(err, people) {
             if(err) {
                 return console.log(err);
             }
@@ -10,7 +10,7 @@ angular.module('StarWarsApp')
         });
 
         $scope.getMoreCharacters = function(){
-        	characterFactory.getAllCharacters(function(err, people) {
+        	characterFactory.getAll(function(err, people) {
         		if(err) {
         			return console.log(err);
         		}
