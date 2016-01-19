@@ -1,3 +1,15 @@
-@import "bourbon";
-@import "neat";
+@import "../libs/lumx/dist/scss/lumx";
 
+html {
+	background-color: $base-background-color;
+}
+
+@font-face {
+    font-family: 'jedi';
+    src: url('../fonts/Starjedi.ttf');
+}
+
+.title {
+	font-family: "jedi";
+	font-size: 2em;
+}

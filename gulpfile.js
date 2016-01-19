@@ -50,7 +50,10 @@ gulp.task('scripts', function() {
 gulp.task('styles', function() {
   return gulp.src('./app/assets/scss/*.scss')
     .pipe(sass({
-      includePaths: require('node-neat').includePaths
+      includePaths: [
+        './app/assets/libs/bourbon/app/assets/stylesheets/',
+        './app/assets/libs/mdi/scss'
+      ]
     }))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('styles.css'))
@@ -60,6 +63,11 @@ gulp.task('styles', function() {
 gulp.task('images', function(){
   return gulp.src('./app/assets/img/*')
     .pipe(gulp.dest('build/assets/img'));
+});
+
+gulp.task('copy', function(){
+  return gulp.src('./app/assets/fonts/*')
+    .pipe(gulp.dest('build/assets/fonts'));
 });
 
 // JavaScript linting task
@@ -78,4 +86,4 @@ gulp.task('watch', ['build'], function() {
 
 gulp.task('default', ['connect', 'watch', 'jshint']);
 
-gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'images']);
+gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'images', 'copy']);
