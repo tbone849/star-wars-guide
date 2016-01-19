@@ -1,9 +1,5 @@
 @import "../libs/lumx/dist/scss/lumx";
 
-html {
-	background-color: $base-background-color;
-}
-
 @font-face {
     font-family: 'jedi';
     src: url('../fonts/Starjedi.ttf');
@@ -19,6 +15,10 @@ html {
     src: url('../fonts/Typo Grotesk Demo.otf');
 }
 
+html {
+	font-family: "jedi-subtitle";
+}
+
 .logo {
 	text-align: center;
 }
@@ -29,9 +29,21 @@ html {
 }
 
 .subtitle {
-	font-family: "jedi-subtitle";
 	letter-spacing: .75em;
 	color: $white;
 	margin-top: -1em;
 	margin-bottom: -2em;
+}
+
+.categories-container {
+	margin: auto;
+	width: 90%;
+}
+
+.category-image {
+	width: 100%;
+}
+
+.jedi-font {
+	font-family: 'jedi';
 }

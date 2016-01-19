@@ -16,6 +16,7 @@
     "tests"
   ],
   "devDependencies": {
+    "angular-route": "1.4.8",
     "lumx": "~0.3.96"
   },
   "resolutions": {

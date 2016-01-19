@@ -10,13 +10,13 @@ angular.module('StarWarsApp')
         });
 
         $scope.getMoreCharacters = function(){
-        	characterFactory.getAll(function(err, people) {
-        		if(err) {
-        			return console.log(err);
-        		}
-        		$scope.people = people;
-        		console.log(people);
-        	});
+            characterFactory.getAll(function(err, people) {
+                if(err) {
+                    return console.log(err);
+                }
+                $scope.people = people;
+                console.log(people);
+            });
         };
          
 	}]);
