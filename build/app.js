@@ -37,7 +37,7 @@ angular.module('StarWarsApp')
 		var personDetails = function(value){
 			return {
 				name: titleCase(value.name),
-				birth_year: value.birth_year,
+				birth_year: getYear(value.birth_year),
 				hair_color: titleCase(value.hair_color),
 				skin_color: titleCase(value.skin_color),
 				gender: titleCase(value.gender),
@@ -60,6 +60,14 @@ angular.module('StarWarsApp')
 			}
 
 			return value + 'cm';
+		};
+
+		var getYear = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value;
 		};
 
 		return {

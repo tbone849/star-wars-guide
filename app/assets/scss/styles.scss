@@ -47,3 +47,15 @@ html {
 .jedi-font {
 	font-family: 'jedi';
 }
+
+.breadcrumbs {
+	color: $white;
+	letter-spacing: .75em;
+	margin: 1em;
+	
+	a:link, a:visited, a:hover, a:active {
+		color: $light-blue-200;
+		text-decoration: none;
+	}
+
+}
