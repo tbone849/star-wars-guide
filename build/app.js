@@ -26,6 +26,18 @@ angular.module('StarWarsApp')
 
 		var pageNumber = 1;
 		var people = [];
+		var personDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				birth_year: value.birth_year,
+				hair_color: titleCase(value.hair_color),
+				skin_color: titleCase(value.skin_color),
+				gender: titleCase(value.gender),
+				height: getHeight(value.height),
+				mass: getMass(value.mass)
+			};
+		};
+
 		var getMass = function(value){
 			if(value === 'unknown'){
 				return 'Unknown';
@@ -51,15 +63,7 @@ angular.module('StarWarsApp')
 						var newPeople = [];
 
 						newPeople = peopleResponse.map(function(value){
-							return {
-								name: titleCase(value.name),
-								birth_year: value.birth_year,
-								hair_color: titleCase(value.hair_color),
-								skin_color: titleCase(value.skin_color),
-								gender: titleCase(value.gender),
-								height: getHeight(value.height),
-								mass: getMass(value.mass)
-							};
+							return personDetails(value);
 						});
 
 						people.push.apply(people, newPeople);
@@ -73,14 +77,7 @@ angular.module('StarWarsApp')
 
 			getByUrl: function(url, callback){
 				$http.get(url).then(function(response){
-					var character = {
-						name: response.name,
-						height: getHeight(response.height),
-						mass: getMass(response.mass),
-						hair_color: titleCase(response.hair_color),
-						skin_color: titleCase(response.skin_color),
-						gender: titleCase(response.gender)
-					};
+					var character = personDetails(response);
 					callback(null, character);
 				}, function(err){
 					callback(err);
