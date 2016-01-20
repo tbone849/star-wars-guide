@@ -1,22 +1,12 @@
 angular.module('StarWarsApp')
-	.controller('characterController', ['$scope', '$http', 'characterFactory', function($scope, $http, characterFactory){
+	.controller('characterController', ['$scope', '$http', 'characterFactory', '$routeParams', function($scope, $http, characterFactory, $routeParams){
 
-		characterFactory.getAll(function(err, people) {
+        var id = $routeParams.id;
+
+		characterFactory.getById(id, function(err, person) {
             if(err) {
                 return console.log(err);
             }
-            $scope.people = people;
-            console.log(people);
-        });
-
-        $scope.getMoreCharacters = function(){
-            characterFactory.getAll(function(err, people) {
-                if(err) {
-                    return console.log(err);
-                }
-                $scope.people = people;
-                console.log(people);
-            });
-        };
-         
+            $scope.person = person;
+        });    
 	}]);

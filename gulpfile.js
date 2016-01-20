@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 
+var neat = require('node-neat');
 var jshint = require('gulp-jshint');
 var connect = require('gulp-connect');
 var sass = require('gulp-sass');
@@ -50,10 +51,7 @@ gulp.task('scripts', function() {
 gulp.task('styles', function() {
   return gulp.src('./app/assets/scss/*.scss')
     .pipe(sass({
-      includePaths: [
-        './app/assets/libs/bourbon/app/assets/stylesheets/',
-        './app/assets/libs/mdi/scss'
-      ]
+      includePaths: require('node-neat').with('./app/assets/libs/mdi/scss')
     }))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('styles.css'))
@@ -81,7 +79,7 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('./app/**/*.html', ['build'] );
   gulp.watch(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/js/*.js'], ['build']);
   gulp.watch('./app/assets/scss/*.scss', ['build']);
-  gulp.watch('./app/assets/img/*', ['build']);
+  gulp.watch('./app/assets/img/**/*', ['build']);
 });
 
 gulp.task('default', ['connect', 'watch', 'jshint']);

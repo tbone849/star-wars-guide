@@ -4,30 +4,23 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute'])
             templateUrl : 'components/categories.html'
         }).when('/characters', {
 			templateUrl : 'components/characters/characters.html',
-			controller : 'characterController'
+			controller : 'charactersController'
+        }).when('/characters/:id', {
+        	templateUrl : 'components/characters/character.html',
+        	controller : 'characterController'
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
-	.controller('characterController', ['$scope', '$http', 'characterFactory', function($scope, $http, characterFactory){
+	.controller('characterController', ['$scope', '$http', 'characterFactory', '$routeParams', function($scope, $http, characterFactory, $routeParams){
 
-		characterFactory.getAll(function(err, people) {
+        var id = $routeParams.id;
+
+		characterFactory.getById(id, function(err, person) {
             if(err) {
                 return console.log(err);
             }
-            $scope.people = people;
-            console.log(people);
-        });
-
-        $scope.getMoreCharacters = function(){
-            characterFactory.getAll(function(err, people) {
-                if(err) {
-                    return console.log(err);
-                }
-                $scope.people = people;
-                console.log(people);
-            });
-        };
-         
+            $scope.person = person;
+        });    
 	}]);
 angular.module('StarWarsApp')
 	.factory('characterFactory', ['$http', 'titleCase', function($http, titleCase){
@@ -37,12 +30,14 @@ angular.module('StarWarsApp')
 		var personDetails = function(value){
 			return {
 				name: titleCase(value.name),
+				name_underscore: titleCase(value.name).split(' ').join('_'),
 				birth_year: getYear(value.birth_year),
 				hair_color: titleCase(value.hair_color),
 				skin_color: titleCase(value.skin_color),
 				gender: titleCase(value.gender),
 				height: getHeight(value.height),
-				mass: getMass(value.mass)
+				mass: getMass(value.mass),
+				id: getId(value.url)
 			};
 		};
 
@@ -70,9 +65,14 @@ angular.module('StarWarsApp')
 			return value;
 		};
 
+		var getId = function(value){
+			var id = value.match(/([0-9])+/g);
+			id = id[0];
+			return id;
+		};
+
 		return {
 			getAll: function(callback)	{
-				console.log('function called');
 				$http.get('http://swapi.co/api/people/?page=' + pageNumber)
 					.then(function(response) {
 						var peopleResponse = response.data.results;
@@ -91,15 +91,37 @@ angular.module('StarWarsApp')
 				});
 			},
 
-			getByUrl: function(url, callback){
-				$http.get(url).then(function(response){
-					var character = personDetails(response);
-					callback(null, character);
-				}, function(err){
-					callback(err);
+			getById: function(id, callback){
+				$http.get('http://swapi.co/api/people/' + id +'/')
+					.then(function(response){
+						var person = personDetails(response.data);
+
+						callback(null, person);
+					}, function(err){
+						callback(err);
 				});
 			}
 		};
+	}]);
+angular.module('StarWarsApp')
+	.controller('charactersController', ['$scope', '$http', 'characterFactory', function($scope, $http, characterFactory){
+
+		characterFactory.getAll(function(err, people) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.people = people;
+        });
+
+        $scope.getMoreCharacters = function(){
+            characterFactory.getAll(function(err, people) {
+                if(err) {
+                    return console.log(err);
+                }
+                $scope.people = people;
+            });
+        };
+         
 	}]);
 angular.module('StarWarsApp')
 	.factory('titleCase', function(){

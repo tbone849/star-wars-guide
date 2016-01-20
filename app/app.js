@@ -4,6 +4,9 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute'])
             templateUrl : 'components/categories.html'
         }).when('/characters', {
 			templateUrl : 'components/characters/characters.html',
-			controller : 'characterController'
+			controller : 'charactersController'
+        }).when('/characters/:id', {
+        	templateUrl : 'components/characters/character.html',
+        	controller : 'characterController'
         }).otherwise('/');
     }]);

@@ -1,3 +1,5 @@
+@import 'bourbon';
+@import 'neat';
 @import "../libs/lumx/dist/scss/lumx";
 
 @font-face {
@@ -15,8 +17,13 @@
     src: url('../fonts/Typo Grotesk Demo.otf');
 }
 
+@font-face {
+	font-family: 'biko';
+	src: url('../fonts/Biko_Regular.otf');
+}
+
 html {
-	font-family: "jedi-subtitle";
+	font-family: "biko";
 }
 
 .logo {
@@ -29,6 +36,7 @@ html {
 }
 
 .subtitle {
+	font-family: 'jedi-subtitle';
 	letter-spacing: .75em;
 	color: $white;
 	margin-top: -1em;
@@ -40,8 +48,44 @@ html {
 	width: 90%;
 }
 
+.category {
+	margin-bottom: 2em;
+	@include span-columns(2);
+	@include media-query(palm) {
+		@include span-columns(12);
+	}
+	@include media-query(portable) {
+    	@include span-columns(4);
+    	@include omega(3n);
+	}
+	
+}
+
 .category-image {
 	width: 100%;
+}
+
+.category-title {
+	@include media-query(portable) {
+		font-size: 2em;
+	}
+	
+}
+
+.characters-container, .character-container {
+	width: 90%;
+	margin: auto;
+}
+
+.person {
+	margin-bottom: 1em;
+	@include span-columns(12/7);
+	//@include omega(7n);
+}
+
+.get-more-button {
+	display: block;
+	clear: both;
 }
 
 .jedi-font {
