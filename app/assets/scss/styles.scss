@@ -66,8 +66,13 @@ html {
 }
 
 .category-title {
-	@include media-query(portable) {
-		font-size: 2em;
+
+	@include media-query(desk) {
+    	font-size: 1em;
+	}
+
+	@include media-query(full-hd) {
+    	font-size: 1.5em;
 	}
 	
 }
@@ -75,6 +80,11 @@ html {
 .characters-container, .character-container {
 	width: 90%;
 	margin: auto;
+}
+
+.persons {
+	clear: both;
+	margin-top: 2em;
 }
 
 .person {
@@ -96,10 +106,29 @@ html {
 	color: $white;
 	letter-spacing: .75em;
 	margin: 1em;
+	margin-right: 10em;
+	display: inline-block;
 	
 	a:link, a:visited, a:hover, a:active {
 		color: $light-blue-200;
 		text-decoration: none;
 	}
 
+}
+
+.pagination {
+	text-align: right;
+	display: inline-block;
+
+	.numbers {
+		margin-right: 1.5em;
+		vertical-align: baseline;
+	}
+
+	.currentPage {
+		color: $white;
+		letter-spacing: .25em;
+		font-size: 1.4em;
+		margin-right: 2em;
+	}
 }

@@ -2,17 +2,22 @@
     <div class="breadcrumbs fs-title">
         <a href="#/">Home</a> / Characters
     </div>
-    <div class="person" ng-repeat="person in people">
-        <a ng-href="#/characters/{{person.id}}">
-            <div class="card">
-                <div class="card__img card__img--left" style="height: 300px">
-                    <img ng-src="/assets/img/characters/{{person.name_underscore}}.jpg" onerror="  this.src='/assets/img/placeholder.jpg'">
-                </div>
-                <div class="p+">
-                    <span class="fs-subhead tc-black-2 display-block">{{person.name}}</ span>
-                </div>
-            </div>
-        </a>
+    <div class="pagination fs-subhead">
+        <span class="currentPage">Page: {{currentPage}}</span>
+        <button class="btn btn--m btn--white btn--raised numbers" lx-ripple ng-repeat="i in pages" ng-click="getNewPage(i)">{{i}}</button>
     </div>
-    <button class="get-more-button" ng-click="getMoreCharacters()">Get More</button>
+    <div class="persons">
+        <div class="person" ng-repeat="person in people">
+            <a ng-href="#/characters/{{person.id}}">
+                <div class="card">
+                    <div class="card__img card__img--left" style="height: 300px">
+                        <img ng-src="/assets/img/characters/{{person.name}}.jpg" onerror="  this.src='/assets/img/placeholder.jpg'">
+                    </div>
+                    <div class="p+">
+                        <span class="fs-subhead tc-black-2 display-block">{{person.name}}</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
 </div>

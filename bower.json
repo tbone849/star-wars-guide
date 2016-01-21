@@ -17,7 +17,8 @@
   ],
   "devDependencies": {
     "angular-route": "1.4.8",
-    "lumx": "~0.3.96"
+    "lumx": "~0.3.96",
+    "angular-underscore-module": "~1.0.3"
   },
   "resolutions": {
     "mdi": "1.2.65"

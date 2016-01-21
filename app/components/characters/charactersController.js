@@ -1,19 +1,26 @@
 angular.module('StarWarsApp')
-	.controller('charactersController', ['$scope', '$http', 'characterFactory', function($scope, $http, characterFactory){
+	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', function($scope, $http, characterFactory, _){
 
-		characterFactory.getAll(function(err, people) {
+        var page = characterFactory.getPageNumber();
+
+		characterFactory.getAll(page, function(err, people) {
             if(err) {
                 return console.log(err);
             }
             $scope.people = people;
+            var numberOfPages = characterFactory.getNumberOfPages();
+            $scope.pages = _.range(1, numberOfPages);
+            $scope.currentPage = characterFactory.getPageNumber();
+
         });
 
-        $scope.getMoreCharacters = function(){
-            characterFactory.getAll(function(err, people) {
+        $scope.getNewPage = function(newPageNumber){
+            characterFactory.getAll(newPageNumber, function(err, people) {
                 if(err) {
                     return console.log(err);
                 }
                 $scope.people = people;
+                $scope.currentPage = characterFactory.getPageNumber();
             });
         };
          
