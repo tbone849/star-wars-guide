@@ -9,7 +9,7 @@ angular.module('StarWarsApp')
             }
             $scope.people = people;
             var numberOfPages = characterFactory.getNumberOfPages();
-            $scope.pages = _.range(1, numberOfPages);
+            $scope.pages = _.range(1, numberOfPages+1);
             $scope.currentPage = characterFactory.getPageNumber();
 
         });
