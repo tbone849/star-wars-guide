@@ -49,7 +49,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/people/?page=' + page)
+				$http.get('http://swapi.co/api/people/?page=' + page, {cache: true})
 					.then(function(response) {
 						pageNumber = page;
 						var peopleResponse = response.data.results;
