@@ -2,7 +2,11 @@
     <div class="breadcrumbs fs-title">
         <a href="#/">Home</a> / Characters
     </div>
-    <pagination factory='character'></pagination>
+    <pagination 
+        current-page="currentPage"
+        pages="pages"
+        click-action="getNewPage(newPageNumber)">
+    </pagination>
     <div class="characters">
         <div class="person" ng-repeat="person in characters">
             <a ng-href="#/characters/{{person.id}}">

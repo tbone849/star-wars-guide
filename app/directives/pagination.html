@@ -1,4 +1,4 @@
 <div class="pagination fs-subhead">
 	<span class="current-page">Page: {{currentPage}}</span>
-	<button class="btn btn--m btn--white btn--raised numbers" lx-ripple ng-repeat="i in pages" ng-click="getNewPage(i)">{{i}}</button>
+	<button class="btn btn--m btn--white btn--raised numbers" lx-ripple ng-repeat="i in pages" ng-click="action({newPageNumber: i})">{{i}}</button>
 </div>
