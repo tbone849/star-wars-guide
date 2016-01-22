@@ -82,7 +82,7 @@ html {
 	margin: auto;
 }
 
-.persons {
+.characters {
 	clear: both;
 	margin-top: 2em;
 }
@@ -91,11 +91,14 @@ html {
 	margin-bottom: 1em;
 	@include span-columns(12/7);
 	@include omega(7n);
+
+	a {
+		text-decoration: none;
+	}
 }
 
-.get-more-button {
-	display: block;
-	clear: both;
+.characters-height {
+	height: 300px;
 }
 
 .jedi-font {
@@ -125,7 +128,7 @@ html {
 		vertical-align: baseline;
 	}
 
-	.currentPage {
+	.current-page {
 		color: $white;
 		letter-spacing: .25em;
 		font-size: 1.4em;

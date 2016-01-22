@@ -1,4 +1,4 @@
-angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore'])
+angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
 	.config(['$routeProvider', function($routeProvider){
         $routeProvider.when('/', {
             templateUrl : 'components/categories.html'
@@ -25,10 +25,9 @@ angular.module('StarWarsApp')
 angular.module('StarWarsApp')
 	.factory('characterFactory', ['$http', 'titleCase', function($http, titleCase){
 
-		var pageNumber = 1;
-		var numberOfPages;
 		var people = [];
-		var personDetails = function(value){
+		var totalCharacterPages;
+		var formatPersonDetails = function(value){
 			return {
 				name: titleCase(value.name),
 				birth_year: formatYear(value.birth_year),
@@ -37,7 +36,8 @@ angular.module('StarWarsApp')
 				gender: titleCase(value.gender),
 				height: formatHeight(value.height),
 				mass: formatMass(value.mass),
-				id: getIdFromUrl(value.url)
+				id: getIdFromUrl(value.url),
+				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg"
 			};
 		};
 
@@ -73,19 +73,18 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/people/?page=' + page, {cache: true})
+				$http.get('http://swapi.co/api/people/?page=' + page)
 					.then(function(response) {
-						pageNumber = page;
 						var peopleResponse = response.data.results;
 						var newPeople = [];
 						var totalPeople;
 
 						newPeople = peopleResponse.map(function(value){
-							return personDetails(value);
+							return formatPersonDetails(value);
 						});
 
 						totalPeople = response.data.count;
-						numberOfPages = Math.ceil(totalPeople / 10);
+						totalCharacterPages = Math.ceil(totalPeople / 10);
 
 						people = newPeople;
 
@@ -98,50 +97,57 @@ angular.module('StarWarsApp')
 			getById: function(id, callback){
 				$http.get('http://swapi.co/api/people/' + id +'/')
 					.then(function(response){
-						var person = personDetails(response.data);
+						var person = formatPersonDetails(response.data);
 
 						callback(null, person);
 					}, function(err){
 						callback(err);
 				});
-			},
-
-			getPageNumber: function(){
-				return pageNumber;
 			}, 
 
 			getNumberOfPages: function(){
-				return numberOfPages;
+				return totalCharacterPages;
 			}
 		};
 	}]);
 angular.module('StarWarsApp')
-	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', function($scope, $http, characterFactory, _){
+	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
+        var pageCache = $cookies.get('currentPage');
+        if(pageCache){
+            $scope.currentPage = pageCache;
+        } else {
+            $scope.currentPage = 1;
+        }
 
-        var page = characterFactory.getPageNumber();
-
-		characterFactory.getAll(page, function(err, people) {
+		characterFactory.getAll($scope.currentPage, function(err, people) {
             if(err) {
                 return console.log(err);
             }
-            $scope.people = people;
+            $scope.characters = people;
             var numberOfPages = characterFactory.getNumberOfPages();
             $scope.pages = _.range(1, numberOfPages+1);
-            $scope.currentPage = characterFactory.getPageNumber();
-
         });
 
         $scope.getNewPage = function(newPageNumber){
+            $cookies.put('currentPage', newPageNumber);
             characterFactory.getAll(newPageNumber, function(err, people) {
                 if(err) {
                     return console.log(err);
                 }
-                $scope.people = people;
-                $scope.currentPage = characterFactory.getPageNumber();
+                $scope.characters = people;
+                $scope.currentPage = newPageNumber;
+
             });
         };
          
 	}]);
+angular.module('StarWarsApp')
+	.directive('pagination', function(){
+		return {
+			restrict: 'E',
+			templateUrl: '/directives/pagination.html'
+		};
+	});
 angular.module('StarWarsApp')
 	.factory('titleCase', function(){
 		return function (string){

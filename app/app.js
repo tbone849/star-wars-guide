@@ -1,4 +1,4 @@
-angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore'])
+angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
 	.config(['$routeProvider', function($routeProvider){
         $routeProvider.when('/', {
             templateUrl : 'components/categories.html'

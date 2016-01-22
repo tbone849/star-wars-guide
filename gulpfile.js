@@ -63,9 +63,14 @@ gulp.task('images', function(){
     .pipe(gulp.dest('build/assets/img'));
 });
 
-gulp.task('copy', function(){
+gulp.task('copyFonts', function(){
   return gulp.src('./app/assets/fonts/*')
     .pipe(gulp.dest('build/assets/fonts'));
+});
+
+gulp.task('copyDirectiveHtml', function(){
+  return gulp.src('./app/directives/*.html')
+    .pipe(gulp.dest('build/directives'));
 });
 
 // JavaScript linting task
@@ -84,4 +89,4 @@ gulp.task('watch', ['build'], function() {
 
 gulp.task('default', ['connect', 'watch', 'jshint']);
 
-gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'images', 'copy']);
+gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'images', 'copyFonts', 'copyDirectiveHtml']);
