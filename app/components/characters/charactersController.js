@@ -1,6 +1,6 @@
 angular.module('StarWarsApp')
 	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
-        var pageCache = $cookies.get('currentPage');
+        var pageCache = $cookies.get('currentCharacterPage');
         if(pageCache){
             $scope.currentPage = pageCache;
         } else {
@@ -17,7 +17,7 @@ angular.module('StarWarsApp')
         });
 
         $scope.getNewPage = function(newPageNumber){
-            $cookies.put('currentPage', newPageNumber);
+            $cookies.put('currentCharacterPage', newPageNumber);
             characterFactory.getAll(newPageNumber, function(err, people) {
                 if(err) {
                     return console.log(err);
