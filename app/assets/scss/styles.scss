@@ -77,17 +77,17 @@ html {
 	
 }
 
-.characters-container, .character-container {
+.characters-container, .character-container, .films-container {
 	width: 90%;
 	margin: auto;
 }
 
-.characters {
+.characters, .films {
 	clear: both;
 	margin-top: 2em;
 }
 
-.person {
+.person, .film {
 	margin-bottom: 1em;
 	@include span-columns(12/7);
 	@include omega(7n);
@@ -97,8 +97,12 @@ html {
 	}
 }
 
-.characters-height {
+.characters-height, .films-height {
 	height: 300px;
+}
+
+.character-height {
+	height: 400px;
 }
 
 .jedi-font {
