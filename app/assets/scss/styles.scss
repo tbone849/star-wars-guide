@@ -77,7 +77,7 @@ html {
 	
 }
 
-.characters-container, .character-container, .films-container {
+.content {
 	width: 90%;
 	margin: auto;
 }
@@ -87,7 +87,7 @@ html {
 	margin-top: 2em;
 }
 
-.person, .film {
+.badge {
 	margin-bottom: 1em;
 	@include span-columns(12/7);
 	@include omega(7n);
@@ -97,11 +97,11 @@ html {
 	}
 }
 
-.characters-height, .films-height {
+.height-300 {
 	height: 300px;
 }
 
-.character-height {
+.height-400 {
 	height: 400px;
 }
 

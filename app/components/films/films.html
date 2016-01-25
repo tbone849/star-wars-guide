@@ -1,4 +1,4 @@
-<div class="films-container">
+<div class="content">
     <breadcrumbs
         category="'films'"
         subcategory='false'>
@@ -9,17 +9,9 @@
         click-action="getNewPage(newPageNumber)">
     </pagination>
     <div class="films">
-        <div class="film" ng-repeat="film in films | orderBy: 'id'">
-            <a ng-href="#/films/{{film.id}}">
-                <div class="card">
-                    <div class="card__img card__img--left films-height">
-                        <img ng-src="{{film.img_url}}" onerror="this.src='/assets/img/placeholder.jpg'">
-                    </div>
-                    <div class="p+">
-                        <span class="fs-subhead tc-black-2 display-block">{{film.name}}</span>
-                    </div>
-                </div>
-            </a>
-        </div>
+        <badge
+            category="'films'"
+            data="films">
+        </badge>
     </div>
 </div>
