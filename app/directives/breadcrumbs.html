@@ -1,0 +1,6 @@
+<div class="breadcrumbs fs-title">
+	<a href="#/">Home</a> / 
+	<span ng-show="!subcategory" class="breadcrumb--capitalize">{{category}}</span>
+	<a ng-show="subcategory" class="breadcrumb--capitalize" href="#/{{category}}">{{category}}</a>
+	<span ng-show="subcategory"> / {{data.name}}</span>
+</div>

@@ -119,6 +119,10 @@ html {
 
 }
 
+.breadcrumb--capitalize {
+	text-transform: capitalize;
+}
+
 .pagination {
 	text-align: right;
 	display: inline-block;

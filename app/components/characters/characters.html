@@ -1,7 +1,8 @@
 <div class="characters-container">
-    <div class="breadcrumbs fs-title">
-        <a href="#/">Home</a> / Characters
-    </div>
+    <breadcrumbs
+        category="'characters'"
+        subcategory='false'>
+    </breadcrumbs>
     <pagination 
         current-page="currentPage"
         pages="pages"
@@ -12,7 +13,7 @@
             <a ng-href="#/characters/{{person.id}}">
                 <div class="card">
                     <div class="card__img card__img--left characters-height">
-                        <img ng-src="{{person.img_url}}" onerror="  this.src='/assets/img/placeholder.jpg'">
+                        <img ng-src="{{person.img_url}}" onerror="this.src='/assets/img/placeholder.jpg'">
                     </div>
                     <div class="p+">
                         <span class="fs-subhead tc-black-2 display-block">{{person.name}}</span>

@@ -1,7 +1,9 @@
 <div class="character-container">
-	<div class="breadcrumbs fs-title">
-		<a href="#/">Home</a> / <a href="#/characters">Characters</a> / {{person.name}}
-	</div>
+	<breadcrumbs
+		category="'characters'"
+		subcategory='true'
+		data='person'>
+	</breadcrumbs>
 	<div flex-container="row" flex-gutter="24">
 		<div flex-item>
 			<div class="card">

@@ -1,12 +1,12 @@
 angular.module('StarWarsApp')
-	.directive('pagination', function(){
+	.directive('breadcrumbs', function(){
 		return {
 			restrict: 'E',
-			templateUrl: '/directives/pagination.html',
+			templateUrl: '/directives/breadcrumbs.html',
 			scope: {
-				currentPage: "=",
-				pages: "=",
-				action: "&clickAction"
+				category: "=",
+				subcategory: "=",
+				data: "="
 			},
 			link: function(scope, element, attr){
 				//console.log(scope);
