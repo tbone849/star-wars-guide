@@ -6,27 +6,14 @@
 	</breadcrumbs>
 	<div flex-container="row" flex-gutter="24">
 		<div flex-item>
-			<div class="card">
-				<div flex-container="row">
-					<div class="card__img card__img--left height-400">
-						<img ng-src="{{person.img_url}}" onerror="this.src='/assets/img/placeholder.jpg'">
-					</div>
-					<div flex-item flex-container="column">
-						<div flex-item>
-							<div class="p+">
-								<strong class="fs-display-1 display-block">{{person.name}}</strong>
-								<p class="fs-title tc-black-2 display-block">	Birth Year: {{person.birth_year}}<br>
-									Height: {{person.height}}<br>
-									Mass: {{person.mass}}<br>
-									Gender: {{person.gender}}<br>
-									Hair Color: {{person.hair_color}}<br>
-									Skin Color: {{person.skin_color}}
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<details-badge data='person'>
+				Birth Year: {{person.birth_year}}<br>
+				Height: {{person.height}}<br>
+				Mass: {{person.mass}}<br>
+				Gender: {{person.gender}}<br>
+				Hair Color: {{person.hair_color}}<br>
+				Skin Color: {{person.skin_color}}
+			</details-badge>
 		</div>
 	</div>
 </div>
