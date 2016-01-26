@@ -40,7 +40,8 @@ angular.module('StarWarsApp')
 				height: formatHeight(value.height),
 				mass: formatMass(value.mass),
 				id: getIdFromUrl(value.url),
-				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg"
+				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg",
+				url: '#/characters/' + getIdFromUrl(value.url)
 			};
 		};
 
@@ -246,7 +247,6 @@ angular.module('StarWarsApp')
 			restrict: 'E',
 			templateUrl: '/directives/badge.html',
 			scope: {
-				category: "=",
 				data: "="
 			},
 			link: function(scope, element, attr){
@@ -276,7 +276,8 @@ angular.module('StarWarsApp')
 			templateUrl: '/directives/detailsBadge.html',
 			transclude: true,
 			scope: {
-				data: "="
+				imgUrl: "=",
+				title: "="
 			},
 			link: function(scope, element, attr){
 				//console.log(scope);

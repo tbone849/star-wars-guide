@@ -13,7 +13,8 @@ angular.module('StarWarsApp')
 				height: formatHeight(value.height),
 				mass: formatMass(value.mass),
 				id: getIdFromUrl(value.url),
-				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg"
+				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg",
+				url: '#/characters/' + getIdFromUrl(value.url)
 			};
 		};
 

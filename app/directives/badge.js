@@ -4,7 +4,6 @@ angular.module('StarWarsApp')
 			restrict: 'E',
 			templateUrl: '/directives/badge.html',
 			scope: {
-				category: "=",
 				data: "="
 			},
 			link: function(scope, element, attr){

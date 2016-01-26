@@ -1,12 +1,12 @@
 <div class="card">
 	<div flex-container="row">
 		<div class="card__img card__img--left height-400">
-			<img ng-src="{{data.img_url}}" onerror="this.src='/assets/img/placeholder.jpg'">
+			<img ng-src="{{imgUrl}}" onerror="this.src='/assets/img/placeholder.jpg'">
 		</div>
 		<div flex-item flex-container="column">
 			<div flex-item>
 				<div class="p+">
-					<strong class="fs-display-1 display-block">{{data.name}}</strong>
+					<strong class="fs-display-1 display-block">{{title}}</strong>
 					<p class="fs-title tc-black-2 display-block" ng-transclude>
 					</p>
 				</div>

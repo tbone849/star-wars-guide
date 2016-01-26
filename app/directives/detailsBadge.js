@@ -5,7 +5,8 @@ angular.module('StarWarsApp')
 			templateUrl: '/directives/detailsBadge.html',
 			transclude: true,
 			scope: {
-				data: "="
+				imgUrl: "=",
+				title: "="
 			},
 			link: function(scope, element, attr){
 				//console.log(scope);
