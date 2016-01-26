@@ -1,14 +1,11 @@
 <div class="content">
-	<breadcrumbs
-		category="'characters'"
-		subcategory='true'
-		data='person'>
+	<breadcrumbs crumbs='crumbsArray'>
 	</breadcrumbs>
 	<div flex-container="row" flex-gutter="24">
 		<div flex-item>
 			<details-badge 
 				img-url='person.img_url'
-				title='person.name'>
+				header='person.name'>
 				Birth Year: {{person.birth_year}}<br>
 				Height: {{person.height}}<br>
 				Mass: {{person.mass}}<br>

@@ -11,11 +11,13 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/films', {
             templateUrl: 'components/films/films.html',
             controller : 'filmsController'
+        }).when('/films/:id', {
+            templateUrl : 'components/films/film.html',
+            controller : 'filmController'
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
 	.controller('characterController', ['$scope', '$http', 'characterFactory', '$routeParams', function($scope, $http, characterFactory, $routeParams){
-
         var id = $routeParams.id;
 
 		characterFactory.getById(id, function(err, person) {
@@ -23,6 +25,11 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.person = person;
+            $scope.crumbsArray = [
+            	{ url: '#/', name: 'Home' },
+            	{ url: '#/characters', name: 'Characters' },
+            	{ name: $scope.person.name }
+            ];
         });    
 	}]);
 angular.module('StarWarsApp')
@@ -39,7 +46,7 @@ angular.module('StarWarsApp')
 				gender: titleCase(value.gender),
 				height: formatHeight(value.height),
 				mass: formatMass(value.mass),
-				id: getIdFromUrl(value.url),
+				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
 			};
@@ -116,6 +123,16 @@ angular.module('StarWarsApp')
 	}]);
 angular.module('StarWarsApp')
 	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
+
+        $scope.crumbsArray = [
+            {
+                url: '#/',
+                name: 'Home'
+            },
+            {
+                name: 'Characters'
+            }
+        ];
         var pageCache = $cookies.get('currentCharacterPage');
         if(pageCache){
             $scope.currentPage = pageCache;
@@ -145,7 +162,18 @@ angular.module('StarWarsApp')
         };
          
 	}]);
+angular.module('StarWarsApp')
+	.controller('filmController', ['$scope', '$http', 'filmFactory', '$routeParams', function($scope, $http, filmFactory, $routeParams){
 
+        var id = $routeParams.id;
+
+		filmFactory.getById(id, function(err, film) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.film = film;
+        });  
+	}]);
 angular.module('StarWarsApp')
 	.factory('filmFactory', ['$http', 'titleCase', function($http, titleCase){
 
@@ -153,13 +181,14 @@ angular.module('StarWarsApp')
 		var totalFilmPages;
 		var formatFilmDetails = function(value){
 			return {
-				name: value.title,
+				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
 				director: value.director,
-				id: value.episode_id,
+				id: parseInt(value.episode_id),
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
-				img_url: "/assets/img/films/" + value.title + ".jpg"
+				img_url: "/assets/img/films/" + value.title + ".jpg",
+				url: "#/films/" + getIdFromUrl(value.url)
 			};
 		};
 
@@ -167,6 +196,49 @@ angular.module('StarWarsApp')
 			var dateParts = date.split('-');
 			var newDate = dateParts[1] + '-' + dateParts[2] + '-' + dateParts[0];
 			return newDate;
+		};
+
+		var getIdFromUrl = function(value){
+			var id = value.match(/([0-9])+/g);
+			id = id[0];
+			return id;
+		};
+
+		var getRomanNumeral = function(number){
+			var numeral;
+			switch(number){
+				case 1: 
+				numeral = 'I';
+				break;
+				case 2: 
+				numeral = 'II';
+				break;
+				case 3: 
+				numeral = 'III';
+				break;
+				case 4: 
+				numeral = 'IV';
+				break;
+				case 5: 
+				numeral = 'V';
+				break;
+				case 6: 
+				numeral = 'VI';
+				break;
+				case 7: 
+				numeral = 'VII';
+				break;
+				case 8: 
+				numeral = 'VIII';
+				break;
+				case 9: 
+				numeral = 'IX';
+				break;
+				case 10: 
+				numeral = 'X';
+				break;
+			}
+			return numeral;
 		};
 
 		return {
@@ -260,12 +332,23 @@ angular.module('StarWarsApp')
 			restrict: 'E',
 			templateUrl: '/directives/breadcrumbs.html',
 			scope: {
-				category: "=",
-				subcategory: "=",
-				data: "="
+				crumbs: '='
 			},
 			link: function(scope, element, attr){
-				//console.log(scope);
+				var crumbsString;
+				scope.$watch('crumbs', function(newValue, oldValue) {
+                	if (newValue){
+                		scope.crumbs.forEach(function(item){
+                			if(item.hasOwnProperty('url')){
+                				crumbsString = '<a href="' + item.url + '">' + item.name + '</a> / ';
+                			} else {
+                				crumbsString = item.name;
+                			}
+                			angular.element(document).find('.breadcrumbs').append(crumbsString);
+                		});
+                	}
+            	}, true);
+				
 			}
 		};
 	});
@@ -277,7 +360,7 @@ angular.module('StarWarsApp')
 			transclude: true,
 			scope: {
 				imgUrl: "=",
-				title: "="
+				header: "="
 			},
 			link: function(scope, element, attr){
 				//console.log(scope);

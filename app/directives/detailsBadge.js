@@ -6,7 +6,7 @@ angular.module('StarWarsApp')
 			transclude: true,
 			scope: {
 				imgUrl: "=",
-				title: "="
+				header: "="
 			},
 			link: function(scope, element, attr){
 				//console.log(scope);

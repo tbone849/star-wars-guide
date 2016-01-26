@@ -12,7 +12,7 @@ angular.module('StarWarsApp')
 				gender: titleCase(value.gender),
 				height: formatHeight(value.height),
 				mass: formatMass(value.mass),
-				id: getIdFromUrl(value.url),
+				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
 			};

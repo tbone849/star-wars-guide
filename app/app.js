@@ -11,5 +11,8 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/films', {
             templateUrl: 'components/films/films.html',
             controller : 'filmsController'
+        }).when('/films/:id', {
+            templateUrl : 'components/films/film.html',
+            controller : 'filmController'
         }).otherwise('/');
     }]);
