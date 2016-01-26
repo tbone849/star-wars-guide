@@ -2,7 +2,7 @@ angular.module('StarWarsApp')
 	.directive('badge', function(){
 		return {
 			restrict: 'E',
-			templateUrl: '/directives/badge.html',
+			templateUrl: './directives/badge.html',
 			scope: {
 				data: "="
 			},
