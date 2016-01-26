@@ -47,7 +47,7 @@ angular.module('StarWarsApp')
 				height: formatHeight(value.height),
 				mass: formatMass(value.mass),
 				id: parseInt(getIdFromUrl(value.url)),
-				img_url: "/assets/img/characters/" + titleCase(value.name) + ".jpg",
+				img_url: "./assets/img/characters/" + titleCase(value.name) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
 			};
 		};
@@ -192,7 +192,7 @@ angular.module('StarWarsApp')
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
-				img_url: "/assets/img/films/" + value.title + ".jpg",
+				img_url: "./assets/img/films/" + value.title + ".jpg",
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
 		};

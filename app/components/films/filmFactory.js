@@ -11,7 +11,7 @@ angular.module('StarWarsApp')
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
-				img_url: "/assets/img/films/" + value.title + ".jpg",
+				img_url: "./assets/img/films/" + value.title + ".jpg",
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
 		};
