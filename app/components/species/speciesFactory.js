@@ -5,7 +5,7 @@ angular.module('StarWarsApp')
 		var totalSpeciesPages;
 		var formatSpeciesDetails = function(value){
 			return {
-				name: value.name,
+				name: titleCase(value.name),
 				classification: titleCase(value.classification),
 				designation: titleCase(value.designation),
 				avg_height: value.average_height + 'cm',
