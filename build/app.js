@@ -23,6 +23,9 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/starships', {
             templateUrl : 'components/starships/starships.html',
             controller : 'starshipsController'
+        }).when('/starships/:id', {
+            templateUrl : 'components/starships/starship.html',
+            controller : 'starshipController'
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
@@ -457,6 +460,22 @@ angular.module('StarWarsApp')
 		};
 	}]);
 angular.module('StarWarsApp')
+	.controller('starshipController', ['$scope', '$http', 'starshipsFactory', '$routeParams', function($scope, $http, starshipsFactory, $routeParams){
+        var id = $routeParams.id;
+
+		starshipsFactory.getById(id, function(err, starship) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.starship = starship;
+            $scope.crumbsArray = [
+            	{ url: '#/', name: 'Home' },
+            	{ url: '#/starships', name: 'Starships' },
+            	{ name: $scope.starship.name }
+            ];
+        });    
+	}]);
+angular.module('StarWarsApp')
 	.controller('starshipsController', ['$scope', '$http', 'starshipsFactory', '_', '$cookies', function($scope, $http, starshipsFactory, _, $cookies){
 
         $scope.crumbsArray = [
@@ -475,7 +494,6 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.starships = starships;
-            console.log($scope.starships);
             var numberOfPages = starshipsFactory.getNumberOfPages();
             $scope.pages = _.range(1, numberOfPages+1);
         });
@@ -503,7 +521,10 @@ angular.module('StarWarsApp')
 				name: value.name,
 				model: value.model,
 				manufacturer: value.manufacturer,
-				cost: value.cost_in_credits + ' credits',
+				cost: {
+					number: value.cost_in_credits,
+					unit: 'credits',
+				},
 				length: {
 					number: value.length,
 					unit: 'm'
@@ -515,7 +536,7 @@ angular.module('StarWarsApp')
 				consumables: value.consumables,
 				hyperdrive_rating: value.hyperdrive_rating,
 				mglt: value.MGLT,
-				starship_class: value.starship_class,
+				shipclass: titleCase(value.starship_class),
 				img_url: './assets/img/starships/' + value.name + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/starships/" + getIdFromUrl(value.url)
@@ -524,12 +545,13 @@ angular.module('StarWarsApp')
 
 		var formatSpeed = function(value){
 			if(value === 'n/a'){
+				console.log(value);
 				return {
-					number: value
+					unit: value
 				};
-			} else if (value.endsWith('km')){
+			} else if (value.includes('km')){
 				return {
-					number: value.match(/\d/g),
+					number: value.match(/\d/g).join(''),
 					unit: 'km/h'
 				};
 			}

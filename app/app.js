@@ -23,5 +23,8 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/starships', {
             templateUrl : 'components/starships/starships.html',
             controller : 'starshipsController'
+        }).when('/starships/:id', {
+            templateUrl : 'components/starships/starship.html',
+            controller : 'starshipController'
         }).otherwise('/');
     }]);

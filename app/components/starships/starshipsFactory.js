@@ -8,7 +8,10 @@ angular.module('StarWarsApp')
 				name: value.name,
 				model: value.model,
 				manufacturer: value.manufacturer,
-				cost: value.cost_in_credits + ' credits',
+				cost: {
+					number: value.cost_in_credits,
+					unit: 'credits',
+				},
 				length: {
 					number: value.length,
 					unit: 'm'
@@ -20,7 +23,7 @@ angular.module('StarWarsApp')
 				consumables: value.consumables,
 				hyperdrive_rating: value.hyperdrive_rating,
 				mglt: value.MGLT,
-				starship_class: value.starship_class,
+				shipclass: titleCase(value.starship_class),
 				img_url: './assets/img/starships/' + value.name + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/starships/" + getIdFromUrl(value.url)
@@ -29,12 +32,13 @@ angular.module('StarWarsApp')
 
 		var formatSpeed = function(value){
 			if(value === 'n/a'){
+				console.log(value);
 				return {
-					number: value
+					unit: value
 				};
-			} else if (value.endsWith('km')){
+			} else if (value.includes('km')){
 				return {
-					number: value.match(/\d/g),
+					number: value.match(/\d/g).join(''),
 					unit: 'km/h'
 				};
 			}

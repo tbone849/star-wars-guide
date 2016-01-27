@@ -17,7 +17,6 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.starships = starships;
-            console.log($scope.starships);
             var numberOfPages = starshipsFactory.getNumberOfPages();
             $scope.pages = _.range(1, numberOfPages+1);
         });
