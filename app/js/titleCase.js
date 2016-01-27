@@ -4,8 +4,12 @@ angular.module('StarWarsApp')
 			var titledString = [];
 			var splitString = string.split(' ');
 			splitString.forEach(function(substring){
-				var titledSub = substring.charAt(0).toUpperCase() + substring.slice(1);
-				titledString.push(titledSub);
+				if(substring === 'n/a'){
+					titledString.push(substring);
+				} else {
+					var titledSub = substring.charAt(0).toUpperCase() + substring.slice(1);
+					titledString.push(titledSub);
+				}	
 			});
 			titledString = titledString.join(' ');
 			return titledString;
