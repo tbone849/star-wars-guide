@@ -523,7 +523,7 @@ angular.module('StarWarsApp')
 				manufacturer: value.manufacturer,
 				cost: formatCost(value.cost_in_credits),
 				length: {
-					number: value.length,
+					number: value.length.replace(/,/g,''),
 					unit: 'm'
 				},
 				speed: formatSpeed(value.max_atmosphering_speed),
