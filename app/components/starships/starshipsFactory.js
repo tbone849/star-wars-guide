@@ -8,10 +8,7 @@ angular.module('StarWarsApp')
 				name: value.name,
 				model: value.model,
 				manufacturer: value.manufacturer,
-				cost: {
-					number: value.cost_in_credits,
-					unit: 'credits',
-				},
+				cost: formatCost(value.cost_in_credits),
 				length: {
 					number: value.length,
 					unit: 'm'
@@ -27,6 +24,19 @@ angular.module('StarWarsApp')
 				img_url: './assets/img/starships/' + value.name + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/starships/" + getIdFromUrl(value.url)
+			};
+		};
+
+		var formatCost = function(value){
+			if(value === 'unknown'){
+				return {
+					unit: 'Unknown'
+				};
+			}
+
+			return {
+				number: value,
+				unit: 'credits'
 			};
 		};
 
