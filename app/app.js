@@ -14,5 +14,11 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/films/:id', {
             templateUrl : 'components/films/film.html',
             controller : 'filmController'
+        }).when('/species', {
+            templateUrl : 'components/species/species.html',
+            controller : 'speciesController'
+        }).when('/species/:id', {
+            templateUrl : 'components/species/specie.html',
+            controller : 'specieController'
         }).otherwise('/');
     }]);

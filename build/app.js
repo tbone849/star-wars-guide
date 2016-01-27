@@ -14,6 +14,12 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/films/:id', {
             templateUrl : 'components/films/film.html',
             controller : 'filmController'
+        }).when('/species', {
+            templateUrl : 'components/species/species.html',
+            controller : 'speciesController'
+        }).when('/species/:id', {
+            templateUrl : 'components/species/specie.html',
+            controller : 'specieController'
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
@@ -125,13 +131,8 @@ angular.module('StarWarsApp')
 	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
 
         $scope.crumbsArray = [
-            {
-                url: '#/',
-                name: 'Home'
-            },
-            {
-                name: 'Characters'
-            }
+            { url: '#/', name: 'Home' },
+            { name: 'Characters' }
         ];
         var pageCache = $cookies.get('currentCharacterPage');
         if(pageCache){
@@ -322,6 +323,135 @@ angular.module('StarWarsApp')
             });
         };
          
+	}]);
+angular.module('StarWarsApp')
+	.controller('specieController', ['$scope', '$http', 'speciesFactory', '$routeParams', function($scope, $http, speciesFactory, $routeParams){
+        var id = $routeParams.id;
+
+		speciesFactory.getById(id, function(err, specie) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.specie = specie;
+            $scope.crumbsArray = [
+            	{ url: '#/', name: 'Home' },
+            	{ url: '#/species', name: 'Species' },
+            	{ name: $scope.specie.name }
+            ];
+        });    
+	}]);
+angular.module('StarWarsApp')
+	.controller('speciesController', ['$scope', '$http', 'speciesFactory', '_', '$cookies', function($scope, $http, speciesFactory, _, $cookies){
+
+        $scope.crumbsArray = [
+            { url: '#/', name: 'Home' },
+            { name: 'Species' }
+        ];
+        var pageCache = $cookies.get('currentSpeciesPage');
+        if(pageCache){
+            $scope.currentPage = pageCache;
+        } else {
+            $scope.currentPage = 1;
+        }
+
+		speciesFactory.getAll($scope.currentPage, function(err, species) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.species = species;
+            var numberOfPages = speciesFactory.getNumberOfPages();
+            $scope.pages = _.range(1, numberOfPages+1);
+        });
+
+        $scope.getNewPage = function(newPageNumber){
+            $cookies.put('currentSpeciesPage', newPageNumber);
+            speciesFactory.getAll(newPageNumber, function(err, species) {
+                if(err) {
+                    return console.log(err);
+                }
+                $scope.species = species;
+                $scope.currentPage = newPageNumber;
+
+            });
+        };
+         
+	}]);
+angular.module('StarWarsApp')
+	.factory('speciesFactory', ['$http', 'titleCase', function($http, titleCase){
+
+		var species = [];
+		var totalSpeciesPages;
+		var formatSpeciesDetails = function(value){
+			return {
+				name: value.name,
+				classification: titleCase(value.classification),
+				designation: titleCase(value.designation),
+				avg_height: value.average_height + 'cm',
+				skin_colors: titleCase(value.skin_colors),
+				hair_colors: titleCase(value.hair_colors),
+				eye_colors: titleCase(value.eye_colors),
+				lifespan: formatLifespan(value.average_lifespan),
+				language: titleCase(value.language),
+				img_url: './assets/img/species/' + value.name + '.jpg',
+				id: parseInt(getIdFromUrl(value.url)),
+				url: "#/species/" + getIdFromUrl(value.url)
+			};
+		};
+
+		var formatLifespan = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value + ' years';
+		};
+
+		var getIdFromUrl = function(value){
+			var id = value.match(/([0-9])+/g);
+			id = id[0];
+			return id;
+		};
+
+
+		return {
+			getAll: function(page, callback)	{
+				$http.get('http://swapi.co/api/species/?page=' + page)
+					.then(function(response) {
+						//console.log(response);
+						var speciesResponse = response.data.results;
+						var newSpecies = [];
+						var totalSpecies;
+
+						newSpecies = speciesResponse.map(function(value){
+							return formatSpeciesDetails(value);
+						});
+
+						totalSpecies = response.data.count;
+						totalSpeciesPages = Math.ceil(totalSpecies / 10);
+
+						species = newSpecies;
+
+						callback(null, species);
+					}, function(err) {
+						callback(err);
+				});
+			},
+
+			getById: function(id, callback){
+				$http.get('http://swapi.co/api/species/' + id +'/')
+					.then(function(response){
+						var specie = formatSpeciesDetails(response.data);
+
+						callback(null, specie);
+					}, function(err){
+						callback(err);
+				});
+			}, 
+
+			getNumberOfPages: function(){
+				return totalSpeciesPages;
+			}
+		};
 	}]);
 angular.module('StarWarsApp')
 	.directive('badge', function(){

@@ -1,33 +1,33 @@
 angular.module('StarWarsApp')
-	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
+	.controller('speciesController', ['$scope', '$http', 'speciesFactory', '_', '$cookies', function($scope, $http, speciesFactory, _, $cookies){
 
         $scope.crumbsArray = [
             { url: '#/', name: 'Home' },
-            { name: 'Characters' }
+            { name: 'Species' }
         ];
-        var pageCache = $cookies.get('currentCharacterPage');
+        var pageCache = $cookies.get('currentSpeciesPage');
         if(pageCache){
             $scope.currentPage = pageCache;
         } else {
             $scope.currentPage = 1;
         }
 
-		characterFactory.getAll($scope.currentPage, function(err, people) {
+		speciesFactory.getAll($scope.currentPage, function(err, species) {
             if(err) {
                 return console.log(err);
             }
-            $scope.characters = people;
-            var numberOfPages = characterFactory.getNumberOfPages();
+            $scope.species = species;
+            var numberOfPages = speciesFactory.getNumberOfPages();
             $scope.pages = _.range(1, numberOfPages+1);
         });
 
         $scope.getNewPage = function(newPageNumber){
-            $cookies.put('currentCharacterPage', newPageNumber);
-            characterFactory.getAll(newPageNumber, function(err, people) {
+            $cookies.put('currentSpeciesPage', newPageNumber);
+            speciesFactory.getAll(newPageNumber, function(err, species) {
                 if(err) {
                     return console.log(err);
                 }
-                $scope.characters = people;
+                $scope.species = species;
                 $scope.currentPage = newPageNumber;
 
             });
