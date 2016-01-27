@@ -392,7 +392,7 @@ angular.module('StarWarsApp')
 				eye_colors: titleCase(value.eye_colors),
 				lifespan: formatLifespan(value.average_lifespan),
 				language: titleCase(value.language),
-				img_url: './assets/img/species/' + value.name + '.jpg',
+				img_url: './assets/img/species/' + titleCase(value.name) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/species/" + getIdFromUrl(value.url)
 			};
