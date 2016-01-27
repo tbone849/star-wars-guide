@@ -83,14 +83,16 @@ html {
 }
 
 .response-container {
+	width: 70%;
+	margin: auto;
 	clear: both;
 	margin-top: 2em;
 }
 
 .badge {
 	margin-bottom: 1em;
-	@include span-columns(12/7);
-	@include omega(7n);
+	@include span-columns(12/5);
+	@include omega(5n);
 
 	a {
 		text-decoration: none;
