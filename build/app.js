@@ -383,7 +383,7 @@ angular.module('StarWarsApp')
 		var totalSpeciesPages;
 		var formatSpeciesDetails = function(value){
 			return {
-				name: value.name,
+				name: titleCase(value.name),
 				classification: titleCase(value.classification),
 				designation: titleCase(value.designation),
 				avg_height: value.average_height + 'cm',
@@ -525,9 +525,13 @@ angular.module('StarWarsApp')
 angular.module('StarWarsApp')
 	.factory('titleCase', function(){
 		return function (string){
-			var titledString = string.replace(/\b(\w)/g, function(letter){
-				return letter.toUpperCase();
+			var titledString = [];
+			var splitString = string.split(' ');
+			splitString.forEach(function(substring){
+				var titledSub = substring.charAt(0).toUpperCase() + substring.slice(1);
+				titledString.push(titledSub);
 			});
+			titledString = titledString.join(' ');
 			return titledString;
 		};
 	});
