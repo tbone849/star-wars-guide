@@ -8,14 +8,14 @@ angular.module('StarWarsApp')
 				name: value.name,
 				model: value.model,
 				manufacturer: value.manufacturer,
-				cost: formatCost(value.cost_in_credits),
+				cost: parseNumberWithUnit(value.cost_in_credits, ' credits'),
 				length: {
 					number: value.length.replace(/,/g,''),
 					unit: 'm'
 				},
 				speed: formatSpeed(value.max_atmosphering_speed),
-				min_crew: value.crew,
-				passengers: value.passengers,
+				min_crew: parseNumber(value.crew),
+				passengers: parseNumber(value.passengers),
 				cargo_capacity: formatWeight(value.cargo_capacity),
 				consumables: titleCase(value.consumables),
 				vehicle_class: titleCase(value.vehicle_class),
@@ -25,22 +25,29 @@ angular.module('StarWarsApp')
 			};
 		};
 
-		var formatCost = function(value){
-			if(value === 'unknown'){
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
 				return {
-					unit: 'Unknown'
+					unit: titleCase(value)
 				};
 			}
 
 			return {
 				number: value,
-				unit: 'credits'
+				unit: unit
 			};
+		};
+
+		var parseNumber = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value;
 		};
 
 		var formatSpeed = function(value){
 			if(value === 'n/a'){
-				console.log(value);
 				return {
 					unit: value
 				};

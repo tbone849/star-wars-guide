@@ -6,35 +6,32 @@ angular.module('StarWarsApp')
 		var formatPersonDetails = function(value){
 			return {
 				name: titleCase(value.name),
-				birth_year: formatYear(value.birth_year),
+				birth_year: parseNumber(value.birth_year),
 				hair_color: titleCase(value.hair_color),
 				skin_color: titleCase(value.skin_color),
 				gender: titleCase(value.gender),
-				height: formatHeight(value.height),
-				mass: formatMass(value.mass),
+				height: parseNumberWithUnit(value.height, 'cm'),
+				mass: parseNumberWithUnit(value.mass, 'kg'),
 				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "./assets/img/characters/" + titleCase(value.name) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
 			};
 		};
 
-		var formatMass = function(value){
-			if(value === 'unknown'){
-				return 'Unknown';
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
+				return {
+					unit: titleCase(value)
+				};
 			}
 
-			return value + 'kg';
+			return {
+				number: value,
+				unit: unit
+			};
 		};
 
-		var formatHeight = function(value){
-			if(value === 'unknown'){
-				return 'Unknown';
-			}
-
-			return value + 'cm';
-		};
-
-		var formatYear = function(value){
+		var parseNumber = function(value){
 			if(value === 'unknown'){
 				return 'Unknown';
 			}

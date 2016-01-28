@@ -6,34 +6,39 @@ angular.module('StarWarsApp')
 		var formatPlanetsDetails = function(value){
 			return {
 				name: value.name,
-				rotation_period: value.rotation_period + ' days',
-				orbital_period: value.orbital_period + ' days',
-				diameter: {number: value.diameter, unit: 'km'},
+				rotation_period: parseNumberWithUnit(value.rotation_period, ' days'),
+				orbital_period: parseNumberWithUnit(value.orbital_period, ' days'),
+				diameter: parseNumberWithUnit(value.diameter, 'km'),
 				climate: titleCase(value.climate),
-				gravity: value.gravity,
+				gravity: titleCase(value.gravity),
 				terrain: titleCase(value.terrain),
-				water: formatWater(value.surface_water),
-				population: formatPopulation(value.population),
+				water: parseNumberWithUnit(value.surface_water, '%'),
+				population: parseNumber(value.population),
 				img_url: './assets/img/planets/' + value.name + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/planets/" + getIdFromUrl(value.url)
 			};
 		};
 
-		var formatPopulation = function(value){
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
+				return {
+					unit: titleCase(value)
+				};
+			}
+
+			return {
+				number: value,
+				unit: unit
+			};
+		};
+
+		var parseNumber = function(value){
 			if(value === 'unknown'){
 				return 'Unknown';
 			}
 
 			return value;
-		};
-
-		var formatWater = function(value){
-			if(value === 'unknown'){
-				return 'Unknown';
-			}
-
-			return value + '%';
 		};
 
 		var getIdFromUrl = function(value){

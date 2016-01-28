@@ -9,12 +9,12 @@
 				img-url='planet.img_url'
 				header='planet.name'>
 				Population: {{planet.population | textOrNumber}}<br>
-				Rotation Period: {{planet.rotation_period}}<br>
-				Orbital Period: {{planet.orbital_period}}<br>
+				Rotation Period: {{planet.rotation_period.number | number}}{{planet.rotation_period.unit}}<br>
+				Orbital Period: {{planet.orbital_period.number | number}}{{planet.orbital_period.unit}}<br>
 				Diameter: {{planet.diameter.number | number}}{{planet.diameter.unit}}<br>
 				Gravity: {{planet.gravity}}<br>
 				Terrain: {{planet.terrain}}<br>
-				Surface Water: {{planet.water}}<br>
+				Surface Water: {{planet.water.number | number}}{{planet.water.unit}}<br>
 				Climate: {{planet.climate}}
 			</details-badge>
 		</div>

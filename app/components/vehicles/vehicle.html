@@ -11,12 +11,12 @@
 				Model: {{vehicle.model}}<br>
 				Manufacturer: {{vehicle.manufacturer}}<br>
 				Class: {{vehicle.vehicle_class}}<br>
-				Cost: {{vehicle.cost.number | number}} {{vehicle.cost.unit}}<br>
+				Cost: {{vehicle.cost.number | number}}{{vehicle.cost.unit}}<br>
 				Speed: {{vehicle.speed.number | number}}{{vehicle.speed.unit}}<br>
 				Length: {{vehicle.length.number | number}}{{vehicle.length.unit}}<br>
 				Cargo Capacity: {{vehicle.cargo_capacity.number | number}}{{vehicle.cargo_capacity.unit}}<br>
-				Mimimum Crew: {{vehicle.min_crew | number}}<br>
-				Passengers: {{vehicle.passengers | number }}
+				Mimimum Crew: {{vehicle.min_crew | textOrNumber}}<br>
+				Passengers: {{vehicle.passengers | textOrNumber }}
 			</details-badge>
 		</div>
 	</div>

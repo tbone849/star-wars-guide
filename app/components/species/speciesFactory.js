@@ -12,7 +12,7 @@ angular.module('StarWarsApp')
 				skin_colors: titleCase(value.skin_colors),
 				hair_colors: titleCase(value.hair_colors),
 				eye_colors: titleCase(value.eye_colors),
-				lifespan: formatLifespan(value.average_lifespan),
+				lifespan: parseNumberWithUnit(value.average_lifespan, ' years'),
 				language: titleCase(value.language),
 				img_url: './assets/img/species/' + titleCase(value.name) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
@@ -20,12 +20,17 @@ angular.module('StarWarsApp')
 			};
 		};
 
-		var formatLifespan = function(value){
-			if(value === 'unknown'){
-				return 'Unknown';
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
+				return {
+					unit: titleCase(value)
+				};
 			}
 
-			return value + ' years';
+			return {
+				number: value,
+				unit: unit
+			};
 		};
 
 		var getIdFromUrl = function(value){

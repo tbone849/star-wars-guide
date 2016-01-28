@@ -8,7 +8,7 @@ angular.module('StarWarsApp')
 				name: value.name,
 				model: value.model,
 				manufacturer: value.manufacturer,
-				cost: formatCost(value.cost_in_credits),
+				cost: parseNumberWithUnit(value.cost_in_credits, ' credits'),
 				length: {
 					number: value.length.replace(/,/g,''),
 					unit: 'm'
@@ -27,22 +27,29 @@ angular.module('StarWarsApp')
 			};
 		};
 
-		var formatCost = function(value){
-			if(value === 'unknown'){
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
 				return {
-					unit: 'Unknown'
+					unit: titleCase(value)
 				};
 			}
 
 			return {
 				number: value,
-				unit: 'credits'
+				unit: unit
 			};
+		};
+
+		var parseNumber = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value;
 		};
 
 		var formatSpeed = function(value){
 			if(value === 'n/a'){
-				console.log(value);
 				return {
 					unit: value
 				};
