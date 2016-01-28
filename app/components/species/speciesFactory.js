@@ -14,7 +14,7 @@ angular.module('StarWarsApp')
 				eye_colors: titleCase(value.eye_colors),
 				lifespan: parseNumberWithUnit(value.average_lifespan, ' years'),
 				language: titleCase(value.language),
-				img_url: './assets/img/species/' + titleCase(value.name) + '.jpg',
+				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/species/" + getIdFromUrl(value.url)
 			};

@@ -58,11 +58,6 @@ gulp.task('styles', function() {
     .pipe(gulp.dest('build/assets/css'));
 });
 
-gulp.task('images', function(){
-  return gulp.src('./app/assets/img/**/*')
-    .pipe(gulp.dest('build/assets/img'));
-});
-
 gulp.task('copyFonts', function(){
   return gulp.src('./app/assets/fonts/*')
     .pipe(gulp.dest('build/assets/fonts'));
@@ -84,9 +79,9 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('./app/**/*.html', ['build'] );
   gulp.watch(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/js/*.js'], ['build']);
   gulp.watch('./app/assets/scss/*.scss', ['build']);
-  gulp.watch('./app/assets/img/**/*', ['build']);
+  gulp.watch('./build/assets/img/**/*', ['build']);
 });
 
 gulp.task('default', ['connect', 'watch', 'jshint']);
 
-gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'images', 'copyFonts', 'copyDirectiveHtml']);
+gulp.task('build', ['html', 'html-partials', 'vendor', 'scripts', 'jshint', 'styles', 'copyFonts', 'copyDirectiveHtml']);
