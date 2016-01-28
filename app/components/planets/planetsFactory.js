@@ -12,7 +12,7 @@ angular.module('StarWarsApp')
 				climate: titleCase(value.climate),
 				gravity: value.gravity,
 				terrain: titleCase(value.terrain),
-				water: value.surface_water + '%',
+				water: formatWater(value.surface_water),
 				population: formatPopulation(value.population),
 				img_url: './assets/img/planets/' + value.name + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
@@ -26,6 +26,14 @@ angular.module('StarWarsApp')
 			}
 
 			return value;
+		};
+
+		var formatWater = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value + '%';
 		};
 
 		var getIdFromUrl = function(value){
