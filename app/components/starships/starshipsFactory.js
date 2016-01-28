@@ -82,7 +82,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/starships/?page=' + page)
+				$http.get('http://swapi.co/api/starships/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var starshipsResponse = response.data.results;
@@ -105,7 +105,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/starships/' + id +'/')
+				$http.get('http://swapi.co/api/starships/' + id +'/', {cache:true})
 					.then(function(response){
 						var starships = formatStarshipsDetails(response.data);
 

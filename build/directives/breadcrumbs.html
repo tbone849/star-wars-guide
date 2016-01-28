@@ -1,2 +1,6 @@
 <div class="breadcrumbs fs-title">
+	<div class='crumb' ng-repeat='crumb in crumbs'>
+		<a ng-href='{{crumb.url}}'>{{crumb.name}}</a> /
+	</div>
+	{{pageTitle}}
 </div>

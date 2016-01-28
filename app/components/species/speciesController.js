@@ -1,10 +1,11 @@
 angular.module('StarWarsApp')
 	.controller('speciesController', ['$scope', '$http', 'speciesFactory', '_', '$cookies', function($scope, $http, speciesFactory, _, $cookies){
 
-        $scope.crumbsArray = [
+        $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { name: 'Species' }
         ];
+        $scope.pageTitle = 'Species';
+
         var pageCache = $cookies.get('currentSpeciesPage');
         if(pageCache){
             $scope.currentPage = pageCache;

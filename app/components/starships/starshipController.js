@@ -7,10 +7,10 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.starship = starship;
-            $scope.crumbsArray = [
+            $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
-            	{ url: '#/starships', name: 'Starships' },
-            	{ name: $scope.starship.name }
+            	{ url: '#/starships', name: 'Starships' }
             ];
+            $scope.pageTitle = $scope.starship.name;
         });    
 	}]);

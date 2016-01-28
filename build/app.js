@@ -37,11 +37,11 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.person = person;
-            $scope.crumbsArray = [
+            $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
-            	{ url: '#/characters', name: 'Characters' },
-            	{ name: $scope.person.name }
+            	{ url: '#/characters', name: 'Characters' }
             ];
+            $scope.pageTitle = $scope.person.name;
         });    
 	}]);
 angular.module('StarWarsApp')
@@ -96,7 +96,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/people/?page=' + page)
+				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
 					.then(function(response) {
 						var peopleResponse = response.data.results;
 						var newPeople = [];
@@ -118,7 +118,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/people/' + id +'/')
+				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
 					.then(function(response){
 						var person = formatPersonDetails(response.data);
 
@@ -136,10 +136,11 @@ angular.module('StarWarsApp')
 angular.module('StarWarsApp')
 	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
 
-        $scope.crumbsArray = [
-            { url: '#/', name: 'Home' },
-            { name: 'Characters' }
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' }
         ];
+        $scope.pageTitle = 'Characters';
+
         var pageCache = $cookies.get('currentCharacterPage');
         if(pageCache){
             $scope.currentPage = pageCache;
@@ -179,11 +180,11 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.film = film;
-            $scope.crumbsArray = [
+            $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
-            	{ url: '#/films', name: 'Films' },
-            	{ name: $scope.film.name }
+            	{ url: '#/films', name: 'Films' }
             ];
+            $scope.pageTitle = $scope.film.name;
         });  
 	}]);
 angular.module('StarWarsApp')
@@ -255,7 +256,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/films/?page=' + page)
+				$http.get('http://swapi.co/api/films/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var filmResponse = response.data.results;
@@ -278,7 +279,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/films/' + id +'/')
+				$http.get('http://swapi.co/api/films/' + id +'/', {cache:true})
 					.then(function(response){
 						var film = formatFilmDetails(response.data);
 
@@ -296,10 +297,11 @@ angular.module('StarWarsApp')
 angular.module('StarWarsApp')
 	.controller('filmsController', ['$scope', '$http', 'filmFactory', '_', '$cookies', function($scope, $http, filmFactory, _, $cookies){
         
-        $scope.crumbsArray = [
-            { url: '#/', name: 'Home' },
-            { name: 'Films' }
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' }
         ];
+        $scope.pageTitle = 'Films';
+
         var pageCache = $cookies.get('currentFilmPage');
         if(pageCache){
             $scope.currentPage = pageCache;
@@ -312,7 +314,6 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.films = films;
-            console.log($scope.films);
             var numberOfPages = filmFactory.getNumberOfPages();
             $scope.pages = _.range(1, numberOfPages+1);
         });
@@ -339,20 +340,21 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.specie = specie;
-            $scope.crumbsArray = [
+            $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
             	{ url: '#/species', name: 'Species' },
-            	{ name: $scope.specie.name }
             ];
+            $scope.pageTitle = $scope.specie.name;
         });    
 	}]);
 angular.module('StarWarsApp')
 	.controller('speciesController', ['$scope', '$http', 'speciesFactory', '_', '$cookies', function($scope, $http, speciesFactory, _, $cookies){
 
-        $scope.crumbsArray = [
+        $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { name: 'Species' }
         ];
+        $scope.pageTitle = 'Species';
+
         var pageCache = $cookies.get('currentSpeciesPage');
         if(pageCache){
             $scope.currentPage = pageCache;
@@ -421,7 +423,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/species/?page=' + page)
+				$http.get('http://swapi.co/api/species/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var speciesResponse = response.data.results;
@@ -444,7 +446,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/species/' + id +'/')
+				$http.get('http://swapi.co/api/species/' + id +'/', {cache:true})
 					.then(function(response){
 						var specie = formatSpeciesDetails(response.data);
 
@@ -468,20 +470,21 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.starship = starship;
-            $scope.crumbsArray = [
+            $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
-            	{ url: '#/starships', name: 'Starships' },
-            	{ name: $scope.starship.name }
+            	{ url: '#/starships', name: 'Starships' }
             ];
+            $scope.pageTitle = $scope.starship.name;
         });    
 	}]);
 angular.module('StarWarsApp')
 	.controller('starshipsController', ['$scope', '$http', 'starshipsFactory', '_', '$cookies', function($scope, $http, starshipsFactory, _, $cookies){
 
-        $scope.crumbsArray = [
-            { url: '#/', name: 'Home' },
-            { name: 'Starships' }
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' }
         ];
+        $scope.pageTitle = 'Starships';
+        
         var pageCache = $cookies.get('currentStarshipsPage');
         if(pageCache){
             $scope.currentPage = pageCache;
@@ -595,7 +598,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/starships/?page=' + page)
+				$http.get('http://swapi.co/api/starships/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var starshipsResponse = response.data.results;
@@ -618,7 +621,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/starships/' + id +'/')
+				$http.get('http://swapi.co/api/starships/' + id +'/', {cache:true})
 					.then(function(response){
 						var starships = formatStarshipsDetails(response.data);
 
@@ -652,23 +655,8 @@ angular.module('StarWarsApp')
 			restrict: 'E',
 			templateUrl: './directives/breadcrumbs.html',
 			scope: {
-				crumbs: '='
-			},
-			link: function(scope, element, attr){
-				var crumbsString;
-				scope.$watch('crumbs', function(newValue, oldValue) {
-                	if (newValue){
-                		scope.crumbs.forEach(function(item){
-                			if(item.hasOwnProperty('url')){
-                				crumbsString = '<a href="' + item.url + '">' + item.name + '</a> / ';
-                			} else {
-                				crumbsString = item.name;
-                			}
-                			angular.element(document).find('.breadcrumbs').append(crumbsString);
-                		});
-                	}
-            	}, true);
-				
+				crumbs: '=',
+				pageTitle: '@'
 			}
 		};
 	});

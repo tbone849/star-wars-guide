@@ -8,10 +8,10 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.film = film;
-            $scope.crumbsArray = [
+            $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
-            	{ url: '#/films', name: 'Films' },
-            	{ name: $scope.film.name }
+            	{ url: '#/films', name: 'Films' }
             ];
+            $scope.pageTitle = $scope.film.name;
         });  
 	}]);
