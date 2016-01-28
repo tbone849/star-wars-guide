@@ -41,7 +41,7 @@ gulp.task('vendor', function() {
 
 // combine and minify js files
 gulp.task('scripts', function() {
-  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/js/*.js'])
+  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/js/*.js', './app/filters/*.js'])
     .pipe(concat('app.js'))
     //.pipe(uglify())
     .pipe(gulp.dest('build'));
@@ -75,7 +75,7 @@ gulp.task('copyDirectiveHtml', function(){
 
 // JavaScript linting task
 gulp.task('jshint', function() {
-  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js'])
+  return gulp.src(['./app/app.js', './app/components/**/*.js', './app/directives/**/*.js', './app/filters/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });

@@ -6,18 +6,26 @@ angular.module('StarWarsApp')
 		var formatPlanetsDetails = function(value){
 			return {
 				name: value.name,
-				rotation_period: value.rotation_period + 'days',
-				orbital_period: value.orbital_period + 'days',
+				rotation_period: value.rotation_period + ' days',
+				orbital_period: value.orbital_period + ' days',
 				diameter: {number: value.diameter, unit: 'km'},
 				climate: titleCase(value.climate),
 				gravity: value.gravity,
 				terrain: titleCase(value.terrain),
 				water: value.surface_water + '%',
-				population: value.population,
+				population: formatPopulation(value.population),
 				img_url: './assets/img/planets/' + value.name + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/planets/" + getIdFromUrl(value.url)
 			};
+		};
+
+		var formatPopulation = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value;
 		};
 
 		var getIdFromUrl = function(value){
