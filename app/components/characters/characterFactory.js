@@ -8,7 +8,7 @@ angular.module('StarWarsApp')
 				name: titleCase(value.name),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
-			}
+			};
 		};
 
 		var formatPersonDetails = function(value){
@@ -62,7 +62,7 @@ angular.module('StarWarsApp')
 					};
 				});
 				return films;
-			} else if (category === 'species' || category === 'characters' || category === 'vehicles' || category === 'starships' || category === 'planets'){
+			} else if (category === 'species' || category === 'characters' || category === 'vehicles' || category === 'starships' || category === 'planets' || category ==='planets'){
 				var related = items.map(function(item){
 					return {
 						name: item.data.name,
@@ -139,6 +139,17 @@ angular.module('StarWarsApp')
 							}
 							var relatedStarships = parseRelated(starships, 'starships');
 							person.starships = relatedStarships;
+						});
+						// get related homeworld
+						var planet = [response.data.homeworld];
+						urlsFactory.getRelatedData(planet,function(err, planets){
+							if(err){
+								person.planets.error = 'Error retrieving planets.';
+								console.log(err);
+								return;
+							}
+							var relatedPlanets = parseRelated(planets, 'planets');
+							person.planets = relatedPlanets;
 						});
 						
 						callback(null, person);

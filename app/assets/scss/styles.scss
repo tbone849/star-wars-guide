@@ -142,3 +142,11 @@ html {
 .crumb {
 	display: inline-block;
 }
+
+.card-link {
+	&:link, &:visited, &:hover, &:active {
+		color: $light-blue-600;
+		text-decoration: none;
+	}
+}
+

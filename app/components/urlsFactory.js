@@ -8,7 +8,7 @@ angular.module('StarWarsApp')
 					urlCalls.push($http.get(url, {cache:true}));
 				});
 
-				$q.all(urlCalls)
+				$q.all(urlCalls, cb)
 					.then(function(results) {
 						cb(null, results);
 					},

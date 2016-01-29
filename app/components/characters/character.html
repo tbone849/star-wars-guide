@@ -13,7 +13,8 @@
 				Mass: {{person.mass.number}}{{person.mass.unit}}<br>
 				Gender: {{person.gender}}<br>
 				Hair Color: {{person.hair_color}}<br>
-				Skin Color: {{person.skin_color}}
+				Skin Color: {{person.skin_color}}<br>
+				Homeworld: <a class='card-link' ng-href="{{person.planets[0].url}}">{{person.planets[0].name}}</a>
 			</details-badge>
 		</div>
 	</div>
