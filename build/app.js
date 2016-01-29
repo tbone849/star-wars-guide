@@ -161,21 +161,41 @@ angular.module('StarWarsApp')
 						var person = formatPersonDetails(response.data);
 						// get related films
 						urlsFactory.getRelatedData(response.data.films,function(err, films){
+							if(err){
+								person.films.error = 'Error retrieving films.';
+								console.log(err);
+								return;
+							}
 							var relatedFilms = parseRelated(films, 'films');
 							person.films = relatedFilms;
 						});
 						// get related species
 						urlsFactory.getRelatedData(response.data.species,function(err, species){
+							if(err){
+								person.species.error = 'Error retrieving species.';
+								console.log(err);
+								return;
+							}
 							var relatedSpecies = parseRelated(species, 'species');
 							person.species = relatedSpecies;
 						});
 						// get related vehicles
 						urlsFactory.getRelatedData(response.data.vehicles,function(err, vehicles){
+							if(err){
+								person.vehicles.error = 'Error retrieving vehicles.';
+								console.log(err);
+								return;
+							}
 							var relatedVehicles = parseRelated(vehicles, 'vehicles');
 							person.vehicles = relatedVehicles;
 						});
 						// get related starships
 						urlsFactory.getRelatedData(response.data.starships,function(err, starships){
+							if(err){
+								person.starships.error = 'Error retrieving starships.';
+								console.log(err);
+								return;
+							}
 							var relatedStarships = parseRelated(starships, 'starships');
 							person.starships = relatedStarships;
 						});
