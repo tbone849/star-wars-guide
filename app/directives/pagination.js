@@ -9,7 +9,9 @@ angular.module('StarWarsApp')
 				action: "&clickAction"
 			},
 			link: function(scope, element, attr){
-				//console.log(scope);
+				scope.isCurrentPage = function(number){
+					return (number === parseInt(scope.currentPage));
+				};				
 			}
 		};
 	});
