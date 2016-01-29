@@ -7,6 +7,7 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.person = person;
+            console.log($scope.person);
             $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
             	{ url: '#/characters', name: 'Characters' }

@@ -1,8 +1,16 @@
 angular.module('StarWarsApp')
-	.factory('characterFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('characterFactory', ['$http', 'titleCase', 'urlsFactory', function($http, titleCase, urlsFactory){
 
 		var people = [];
 		var totalCharacterPages;
+		var formatPersonBasicInfo = function(value){
+			return {
+				name: titleCase(value.name),
+				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
+				url: '#/characters/' + getIdFromUrl(value.url)
+			}
+		};
+
 		var formatPersonDetails = function(value){
 			return {
 				name: titleCase(value.name),
@@ -45,6 +53,26 @@ angular.module('StarWarsApp')
 			return id;
 		};
 
+		var parseRelated = function(items, category){
+			if(category === 'films'){
+				var films = items.map(function(item){
+					return {
+						name: item.data.title,
+						url: '#/films/' + getIdFromUrl(item.data.url)
+					};
+				});
+				return films;
+			} else if (category === 'species' || category === 'characters' || category === 'vehicles' || category === 'starships' || category === 'planets'){
+				var related = items.map(function(item){
+					return {
+						name: item.data.name,
+						url: '#/' + category + '/' + getIdFromUrl(item.data.url)
+					};
+				});
+				return related;
+			}
+		};
+
 		return {
 			getAll: function(page, callback)	{
 				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
@@ -54,7 +82,7 @@ angular.module('StarWarsApp')
 						var totalPeople;
 
 						newPeople = peopleResponse.map(function(value){
-							return formatPersonDetails(value);
+							return formatPersonBasicInfo(value);
 						});
 
 						totalPeople = response.data.count;
@@ -72,7 +100,27 @@ angular.module('StarWarsApp')
 				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
 					.then(function(response){
 						var person = formatPersonDetails(response.data);
-
+						// get related films
+						urlsFactory.getRelatedData(response.data.films,function(err, films){
+							var relatedFilms = parseRelated(films, 'films');
+							person.films = relatedFilms;
+						});
+						// get related species
+						urlsFactory.getRelatedData(response.data.species,function(err, species){
+							var relatedSpecies = parseRelated(species, 'species');
+							person.species = relatedSpecies;
+						});
+						// get related vehicles
+						urlsFactory.getRelatedData(response.data.vehicles,function(err, vehicles){
+							var relatedVehicles = parseRelated(vehicles, 'vehicles');
+							person.vehicles = relatedVehicles;
+						});
+						// get related starships
+						urlsFactory.getRelatedData(response.data.starships,function(err, starships){
+							var relatedStarships = parseRelated(starships, 'starships');
+							person.starships = relatedStarships;
+						});
+						
 						callback(null, person);
 					}, function(err){
 						callback(err);

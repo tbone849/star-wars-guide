@@ -88,7 +88,7 @@ angular.module('StarWarsApp')
 
 
 		return {
-			getAll: function(page, callback)	{
+			getAll: function(page, callback){
 				$http.get('http://swapi.co/api/starships/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
