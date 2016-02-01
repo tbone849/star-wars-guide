@@ -1,8 +1,17 @@
 angular.module('StarWarsApp')
-	.factory('speciesFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('speciesFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var species = [];
 		var totalSpeciesPages;
+
+		var formatSpeciesBasicDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/species/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatSpeciesDetails = function(value){
 			return {
 				name: titleCase(value.name),
@@ -50,7 +59,7 @@ angular.module('StarWarsApp')
 						var totalSpecies;
 
 						newSpecies = speciesResponse.map(function(value){
-							return formatSpeciesDetails(value);
+							return formatSpeciesBasicDetails(value);
 						});
 
 						totalSpecies = response.data.count;
@@ -73,6 +82,24 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
+			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var species = results.map(function(item){
+							return formatSpeciesBasicDetails(item.data);
+						});
+						cb(null, species);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
 			}, 
 
 			getNumberOfPages: function(){

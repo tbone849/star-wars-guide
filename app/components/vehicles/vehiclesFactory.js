@@ -1,8 +1,17 @@
 angular.module('StarWarsApp')
-	.factory('vehiclesFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('vehiclesFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var vehicles = [];
 		var totalVehiclesPages;
+
+		var formatVehicleBasicDetails = function(value){
+			return {
+				name: value.name,
+				img_url: './assets/img/vehicles/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/vehicles/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatVehiclesDetails = function(value){
 			return {
 				name: value.name,
@@ -95,7 +104,7 @@ angular.module('StarWarsApp')
 						var totalVehicles;
 
 						newVehicles = vehiclesResponse.map(function(value){
-							return formatVehiclesDetails(value);
+							return formatVehicleBasicDetails(value);
 						});
 
 						totalVehicles = response.data.count;
@@ -119,6 +128,24 @@ angular.module('StarWarsApp')
 						callback(err);
 				});
 			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var vehicles = results.map(function(item){
+							return formatVehicleBasicDetails(item.data);
+						});
+						cb(null, vehicles);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			},
 
 			getNumberOfPages: function(){
 				return totalVehiclesPages;

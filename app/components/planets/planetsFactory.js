@@ -1,8 +1,17 @@
 angular.module('StarWarsApp')
-	.factory('planetsFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('planetsFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var planets = [];
 		var totalPlanetsPages;
+
+		var formatPlanetBasicDetails = function(value){
+			return {
+				name: value.name,
+				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/planets/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatPlanetsDetails = function(value){
 			return {
 				name: value.name,
@@ -58,7 +67,7 @@ angular.module('StarWarsApp')
 						var totalPlanets;
 
 						newPlanets = planetsResponse.map(function(value){
-							return formatPlanetsDetails(value);
+							return formatPlanetBasicDetails(value);
 						});
 
 						totalPlanets = response.data.count;
@@ -81,6 +90,24 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
+			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var planets = results.map(function(item){
+							return formatPlanetBasicDetails(item.data);
+						});
+						cb(null, planets);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
 			}, 
 
 			getNumberOfPages: function(){

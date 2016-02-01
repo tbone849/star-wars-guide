@@ -1,8 +1,17 @@
 angular.module('StarWarsApp')
-	.factory('filmFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('filmFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var films = [];
 		var totalFilmPages;
+
+		var formatFilmBasicDetails = function(value){
+			return {
+				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
+				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
+				url: "#/films/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatFilmDetails = function(value){
 			return {
 				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
@@ -11,6 +20,11 @@ angular.module('StarWarsApp')
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
+				character_urls: value.characters,
+				planet_urls: value.planets,
+				starship_urls: value.starships,
+				vehicle_urls: value.vehicles,
+				species_urls: value.species,
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
@@ -75,7 +89,7 @@ angular.module('StarWarsApp')
 						var totalFilms;
 
 						newFilms = filmResponse.map(function(value){
-							return formatFilmDetails(value);
+							return formatFilmBasicDetails(value);
 						});
 
 						totalFilms = response.data.count;
@@ -98,7 +112,25 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
-			}, 
+			},
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var films = results.map(function(item){
+							return formatFilmBasicDetails(item.data);
+						});
+						cb(null, films);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			},  
 
 			getNumberOfPages: function(){
 				return totalFilmPages;

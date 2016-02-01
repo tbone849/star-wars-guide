@@ -41,7 +41,7 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
-	.controller('characterController', ['$scope', '$http', 'characterFactory', '$routeParams', function($scope, $http, characterFactory, $routeParams){
+	.controller('characterController', ['$scope', '$http', 'characterFactory', 'filmFactory', 'speciesFactory', 'vehiclesFactory', 'starshipsFactory', 'planetsFactory', '$routeParams', function($scope, $http, characterFactory, filmFactory, speciesFactory, vehiclesFactory, starshipsFactory, planetsFactory, $routeParams){
         var id = $routeParams.id;
 
 		characterFactory.getById(id, function(err, person) {
@@ -49,6 +49,42 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.person = person;
+
+            filmFactory.getByUrls(person.film_urls, function(err, films){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.films = films;
+            });
+
+            planetsFactory.getByUrls(person.homeworld_url, function(err, homeworld){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.homeworld = homeworld[0];
+            });
+
+            speciesFactory.getByUrls(person.species_urls, function(err, species){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.species = species[0];
+            });
+
+            vehiclesFactory.getByUrls(person.vehicle_urls, function(err, vehicles){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.vehicles = vehicles;
+            });
+
+            starshipsFactory.getByUrls(person.starship_urls, function(err, starships){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.starships = starships;
+            });
+            
             console.log($scope.person);
             $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
@@ -58,11 +94,11 @@ angular.module('StarWarsApp')
         });    
 	}]);
 angular.module('StarWarsApp')
-	.factory('characterFactory', ['$http', 'titleCase', 'urlsFactory', function($http, titleCase, urlsFactory){
+	.factory('characterFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var people = [];
 		var totalCharacterPages;
-		var formatPersonBasicInfo = function(value){
+		var formatPersonBasicDetails = function(value){
 			return {
 				name: titleCase(value.name),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
@@ -79,6 +115,11 @@ angular.module('StarWarsApp')
 				gender: titleCase(value.gender),
 				height: parseNumberWithUnit(value.height, 'cm'),
 				mass: parseNumberWithUnit(value.mass, 'kg'),
+				homeworld_url: [value.homeworld],
+				film_urls: value.films,
+				species_urls: value.species,
+				vehicle_urls: value.vehicles,
+				starship_urls: value.starships,
 				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
@@ -112,26 +153,6 @@ angular.module('StarWarsApp')
 			return id;
 		};
 
-		var parseRelated = function(items, category){
-			if(category === 'films'){
-				var films = items.map(function(item){
-					return {
-						name: item.data.title,
-						url: '#/films/' + getIdFromUrl(item.data.url)
-					};
-				});
-				return films;
-			} else if (category === 'species' || category === 'characters' || category === 'vehicles' || category === 'starships' || category === 'planets' || category ==='planets'){
-				var related = items.map(function(item){
-					return {
-						name: item.data.name,
-						url: '#/' + category + '/' + getIdFromUrl(item.data.url)
-					};
-				});
-				return related;
-			}
-		};
-
 		return {
 			getAll: function(page, callback)	{
 				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
@@ -141,7 +162,7 @@ angular.module('StarWarsApp')
 						var totalPeople;
 
 						newPeople = peopleResponse.map(function(value){
-							return formatPersonBasicInfo(value);
+							return formatPersonBasicDetails(value);
 						});
 
 						totalPeople = response.data.count;
@@ -159,62 +180,29 @@ angular.module('StarWarsApp')
 				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
 					.then(function(response){
 						var person = formatPersonDetails(response.data);
-						// get related films
-						urlsFactory.getRelatedData(response.data.films,function(err, films){
-							if(err){
-								person.films.error = 'Error retrieving films.';
-								console.log(err);
-								return;
-							}
-							var relatedFilms = parseRelated(films, 'films');
-							person.films = relatedFilms;
-						});
-						// get related species
-						urlsFactory.getRelatedData(response.data.species,function(err, species){
-							if(err){
-								person.species.error = 'Error retrieving species.';
-								console.log(err);
-								return;
-							}
-							var relatedSpecies = parseRelated(species, 'species');
-							person.species = relatedSpecies;
-						});
-						// get related vehicles
-						urlsFactory.getRelatedData(response.data.vehicles,function(err, vehicles){
-							if(err){
-								person.vehicles.error = 'Error retrieving vehicles.';
-								console.log(err);
-								return;
-							}
-							var relatedVehicles = parseRelated(vehicles, 'vehicles');
-							person.vehicles = relatedVehicles;
-						});
-						// get related starships
-						urlsFactory.getRelatedData(response.data.starships,function(err, starships){
-							if(err){
-								person.starships.error = 'Error retrieving starships.';
-								console.log(err);
-								return;
-							}
-							var relatedStarships = parseRelated(starships, 'starships');
-							person.starships = relatedStarships;
-						});
-						// get related homeworld
-						var planet = [response.data.homeworld];
-						urlsFactory.getRelatedData(planet,function(err, planets){
-							if(err){
-								person.planets.error = 'Error retrieving planets.';
-								console.log(err);
-								return;
-							}
-							var relatedPlanets = parseRelated(planets, 'planets');
-							person.planets = relatedPlanets;
-						});
 						
 						callback(null, person);
 					}, function(err){
 						callback(err);
 				});
+			},
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var characters = results.map(function(item){
+							return formatPersonBasicDetails(item.data);
+						});
+						cb(null, characters);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
 			}, 
 
 			getNumberOfPages: function(){
@@ -260,150 +248,6 @@ angular.module('StarWarsApp')
          
 	}]);
 angular.module('StarWarsApp')
-	.controller('planetController', ['$scope', '$http', 'planetsFactory', '$routeParams', function($scope, $http, planetsFactory, $routeParams){
-        var id = $routeParams.id;
-
-		planetsFactory.getById(id, function(err, planet) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.planet = planet;
-            console.log($scope.planet);
-            $scope.crumbs = [
-            	{ url: '#/', name: 'Home' },
-            	{ url: '#/planets', name: 'Planets' }
-            ];
-            $scope.pageTitle = $scope.planet.name;
-        });    
-	}]);
-angular.module('StarWarsApp')
-	.controller('planetsController', ['$scope', '$http', 'planetsFactory', '_', '$cookies', function($scope, $http, planetsFactory, _, $cookies){
-
-        $scope.crumbs = [
-            { url: '#/', name: 'Home' }
-        ];
-        $scope.pageTitle = 'Planets';
-        
-        var pageCache = $cookies.get('currentPlanetsPage');
-        if(pageCache){
-            $scope.currentPage = pageCache;
-        } else {
-            $scope.currentPage = 1;
-        }
-
-		planetsFactory.getAll($scope.currentPage, function(err, planets) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.planets = planets;
-            var numberOfPages = planetsFactory.getNumberOfPages();
-            $scope.pages = _.range(1, numberOfPages+1);
-        });
-
-        $scope.getNewPage = function(newPageNumber){
-            $cookies.put('currentPlanetsPage', newPageNumber);
-            planetsFactory.getAll(newPageNumber, function(err, planets) {
-                if(err) {
-                    return console.log(err);
-                }
-                $scope.planets = planets;
-                $scope.currentPage = newPageNumber;
-
-            });
-        };
-         
-	}]);
-angular.module('StarWarsApp')
-	.factory('planetsFactory', ['$http', 'titleCase', function($http, titleCase){
-
-		var planets = [];
-		var totalPlanetsPages;
-		var formatPlanetsDetails = function(value){
-			return {
-				name: value.name,
-				rotation_period: parseNumberWithUnit(value.rotation_period, ' days'),
-				orbital_period: parseNumberWithUnit(value.orbital_period, ' days'),
-				diameter: parseNumberWithUnit(value.diameter, 'km'),
-				climate: titleCase(value.climate),
-				gravity: titleCase(value.gravity),
-				terrain: titleCase(value.terrain),
-				water: parseNumberWithUnit(value.surface_water, '%'),
-				population: parseNumber(value.population),
-				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
-				id: parseInt(getIdFromUrl(value.url)),
-				url: "#/planets/" + getIdFromUrl(value.url)
-			};
-		};
-
-		var parseNumberWithUnit = function(value, unit){
-			if(isNaN(value)){
-				return {
-					unit: titleCase(value)
-				};
-			}
-
-			return {
-				number: value,
-				unit: unit
-			};
-		};
-
-		var parseNumber = function(value){
-			if(value === 'unknown'){
-				return 'Unknown';
-			}
-
-			return value;
-		};
-
-		var getIdFromUrl = function(value){
-			var id = value.match(/([0-9])+/g);
-			id = id[0];
-			return id;
-		};
-
-
-		return {
-			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/planets/?page=' + page, {cache:true})
-					.then(function(response) {
-						//console.log(response);
-						var planetsResponse = response.data.results;
-						var newPlanets = [];
-						var totalPlanets;
-
-						newPlanets = planetsResponse.map(function(value){
-							return formatPlanetsDetails(value);
-						});
-
-						totalPlanets = response.data.count;
-						totalPlanetsPages = Math.ceil(totalPlanets / 10);
-
-						planets = newPlanets;
-
-						callback(null, planets);
-					}, function(err) {
-						callback(err);
-				});
-			},
-
-			getById: function(id, callback){
-				$http.get('http://swapi.co/api/planets/' + id +'/', {cache:true})
-					.then(function(response){
-						var planets = formatPlanetsDetails(response.data);
-
-						callback(null, planets);
-					}, function(err){
-						callback(err);
-				});
-			}, 
-
-			getNumberOfPages: function(){
-				return totalPlanetsPages;
-			}
-		};
-	}]);
-angular.module('StarWarsApp')
 	.controller('filmController', ['$scope', '$http', 'filmFactory', '$routeParams', function($scope, $http, filmFactory, $routeParams){
 
         var id = $routeParams.id;
@@ -421,10 +265,19 @@ angular.module('StarWarsApp')
         });  
 	}]);
 angular.module('StarWarsApp')
-	.factory('filmFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('filmFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var films = [];
 		var totalFilmPages;
+
+		var formatFilmBasicDetails = function(value){
+			return {
+				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
+				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
+				url: "#/films/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatFilmDetails = function(value){
 			return {
 				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
@@ -433,6 +286,11 @@ angular.module('StarWarsApp')
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
+				character_urls: value.characters,
+				planet_urls: value.planets,
+				starship_urls: value.starships,
+				vehicle_urls: value.vehicles,
+				species_urls: value.species,
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
@@ -497,7 +355,7 @@ angular.module('StarWarsApp')
 						var totalFilms;
 
 						newFilms = filmResponse.map(function(value){
-							return formatFilmDetails(value);
+							return formatFilmBasicDetails(value);
 						});
 
 						totalFilms = response.data.count;
@@ -520,7 +378,25 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
-			}, 
+			},
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var films = results.map(function(item){
+							return formatFilmBasicDetails(item.data);
+						});
+						cb(null, films);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			},  
 
 			getNumberOfPages: function(){
 				return totalFilmPages;
@@ -563,6 +439,177 @@ angular.module('StarWarsApp')
             });
         };
          
+	}]);
+angular.module('StarWarsApp')
+	.controller('planetController', ['$scope', '$http', 'planetsFactory', '$routeParams', function($scope, $http, planetsFactory, $routeParams){
+        var id = $routeParams.id;
+
+		planetsFactory.getById(id, function(err, planet) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.planet = planet;
+            console.log($scope.planet);
+            $scope.crumbs = [
+            	{ url: '#/', name: 'Home' },
+            	{ url: '#/planets', name: 'Planets' }
+            ];
+            $scope.pageTitle = $scope.planet.name;
+        });    
+	}]);
+angular.module('StarWarsApp')
+	.controller('planetsController', ['$scope', '$http', 'planetsFactory', '_', '$cookies', function($scope, $http, planetsFactory, _, $cookies){
+
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' }
+        ];
+        $scope.pageTitle = 'Planets';
+        
+        var pageCache = $cookies.get('currentPlanetsPage');
+        if(pageCache){
+            $scope.currentPage = pageCache;
+        } else {
+            $scope.currentPage = 1;
+        }
+
+		planetsFactory.getAll($scope.currentPage, function(err, planets) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.planets = planets;
+            var numberOfPages = planetsFactory.getNumberOfPages();
+            $scope.pages = _.range(1, numberOfPages+1);
+        });
+
+        $scope.getNewPage = function(newPageNumber){
+            $cookies.put('currentPlanetsPage', newPageNumber);
+            planetsFactory.getAll(newPageNumber, function(err, planets) {
+                if(err) {
+                    return console.log(err);
+                }
+                $scope.planets = planets;
+                $scope.currentPage = newPageNumber;
+
+            });
+        };
+         
+	}]);
+angular.module('StarWarsApp')
+	.factory('planetsFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
+
+		var planets = [];
+		var totalPlanetsPages;
+
+		var formatPlanetBasicDetails = function(value){
+			return {
+				name: value.name,
+				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/planets/" + getIdFromUrl(value.url)
+			};
+		};
+
+		var formatPlanetsDetails = function(value){
+			return {
+				name: value.name,
+				rotation_period: parseNumberWithUnit(value.rotation_period, ' days'),
+				orbital_period: parseNumberWithUnit(value.orbital_period, ' days'),
+				diameter: parseNumberWithUnit(value.diameter, 'km'),
+				climate: titleCase(value.climate),
+				gravity: titleCase(value.gravity),
+				terrain: titleCase(value.terrain),
+				water: parseNumberWithUnit(value.surface_water, '%'),
+				population: parseNumber(value.population),
+				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				id: parseInt(getIdFromUrl(value.url)),
+				url: "#/planets/" + getIdFromUrl(value.url)
+			};
+		};
+
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
+				return {
+					unit: titleCase(value)
+				};
+			}
+
+			return {
+				number: value,
+				unit: unit
+			};
+		};
+
+		var parseNumber = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value;
+		};
+
+		var getIdFromUrl = function(value){
+			var id = value.match(/([0-9])+/g);
+			id = id[0];
+			return id;
+		};
+
+
+		return {
+			getAll: function(page, callback)	{
+				$http.get('http://swapi.co/api/planets/?page=' + page, {cache:true})
+					.then(function(response) {
+						//console.log(response);
+						var planetsResponse = response.data.results;
+						var newPlanets = [];
+						var totalPlanets;
+
+						newPlanets = planetsResponse.map(function(value){
+							return formatPlanetBasicDetails(value);
+						});
+
+						totalPlanets = response.data.count;
+						totalPlanetsPages = Math.ceil(totalPlanets / 10);
+
+						planets = newPlanets;
+
+						callback(null, planets);
+					}, function(err) {
+						callback(err);
+				});
+			},
+
+			getById: function(id, callback){
+				$http.get('http://swapi.co/api/planets/' + id +'/', {cache:true})
+					.then(function(response){
+						var planets = formatPlanetsDetails(response.data);
+
+						callback(null, planets);
+					}, function(err){
+						callback(err);
+				});
+			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var planets = results.map(function(item){
+							return formatPlanetBasicDetails(item.data);
+						});
+						cb(null, planets);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			}, 
+
+			getNumberOfPages: function(){
+				return totalPlanetsPages;
+			}
+		};
 	}]);
 angular.module('StarWarsApp')
 	.controller('specieController', ['$scope', '$http', 'speciesFactory', '$routeParams', function($scope, $http, speciesFactory, $routeParams){
@@ -618,10 +665,19 @@ angular.module('StarWarsApp')
          
 	}]);
 angular.module('StarWarsApp')
-	.factory('speciesFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('speciesFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var species = [];
 		var totalSpeciesPages;
+
+		var formatSpeciesBasicDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/species/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatSpeciesDetails = function(value){
 			return {
 				name: titleCase(value.name),
@@ -669,7 +725,7 @@ angular.module('StarWarsApp')
 						var totalSpecies;
 
 						newSpecies = speciesResponse.map(function(value){
-							return formatSpeciesDetails(value);
+							return formatSpeciesBasicDetails(value);
 						});
 
 						totalSpecies = response.data.count;
@@ -692,6 +748,24 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
+			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var species = results.map(function(item){
+							return formatSpeciesBasicDetails(item.data);
+						});
+						cb(null, species);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
 			}, 
 
 			getNumberOfPages: function(){
@@ -753,10 +827,19 @@ angular.module('StarWarsApp')
          
 	}]);
 angular.module('StarWarsApp')
-	.factory('starshipsFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('starshipsFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var starships = [];
 		var totalStarshipsPages;
+
+		var formatStarshipBasicDetails = function(value){
+			return {
+				name: value.name,
+				img_url: './assets/img/starships/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/starships/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatStarshipsDetails = function(value){
 			return {
 				name: value.name,
@@ -851,7 +934,7 @@ angular.module('StarWarsApp')
 						var totalStarships;
 
 						newStarships = starshipsResponse.map(function(value){
-							return formatStarshipsDetails(value);
+							return formatStarshipBasicDetails(value);
 						});
 
 						totalStarships = response.data.count;
@@ -875,6 +958,24 @@ angular.module('StarWarsApp')
 						callback(err);
 				});
 			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var starships = results.map(function(item){
+							return formatStarshipBasicDetails(item.data);
+						});
+						cb(null, starships);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			},
 
 			getNumberOfPages: function(){
 				return totalStarshipsPages;
@@ -935,10 +1036,19 @@ angular.module('StarWarsApp')
          
 	}]);
 angular.module('StarWarsApp')
-	.factory('vehiclesFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('vehiclesFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var vehicles = [];
 		var totalVehiclesPages;
+
+		var formatVehicleBasicDetails = function(value){
+			return {
+				name: value.name,
+				img_url: './assets/img/vehicles/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/vehicles/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatVehiclesDetails = function(value){
 			return {
 				name: value.name,
@@ -1031,7 +1141,7 @@ angular.module('StarWarsApp')
 						var totalVehicles;
 
 						newVehicles = vehiclesResponse.map(function(value){
-							return formatVehiclesDetails(value);
+							return formatVehicleBasicDetails(value);
 						});
 
 						totalVehicles = response.data.count;
@@ -1056,29 +1166,26 @@ angular.module('StarWarsApp')
 				});
 			}, 
 
-			getNumberOfPages: function(){
-				return totalVehiclesPages;
-			}
-		};
-	}]);
-angular.module('StarWarsApp')
-	.factory('urlsFactory', ['$http', '$q', function($http, $q){
-		return {
-			getRelatedData: function(urls, cb){
-
-				var urlCalls = [];
-				angular.forEach(urls, function(url) {
-					urlCalls.push($http.get(url, {cache:true}));
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
 				});
 
 				$q.all(urlCalls, cb)
 					.then(function(results) {
-						cb(null, results);
+						var vehicles = results.map(function(item){
+							return formatVehicleBasicDetails(item.data);
+						});
+						cb(null, vehicles);
 					},
-					function(errors) {
-						cb(errors);
+					function(err) {
+						cb(err);
 					}
 				);
+			},
+
+			getNumberOfPages: function(){
+				return totalVehiclesPages;
 			}
 		};
 	}]);

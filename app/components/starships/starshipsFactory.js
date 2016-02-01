@@ -1,8 +1,17 @@
 angular.module('StarWarsApp')
-	.factory('starshipsFactory', ['$http', 'titleCase', function($http, titleCase){
+	.factory('starshipsFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var starships = [];
 		var totalStarshipsPages;
+
+		var formatStarshipBasicDetails = function(value){
+			return {
+				name: value.name,
+				img_url: './assets/img/starships/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/starships/" + getIdFromUrl(value.url)
+			};
+		};
+
 		var formatStarshipsDetails = function(value){
 			return {
 				name: value.name,
@@ -97,7 +106,7 @@ angular.module('StarWarsApp')
 						var totalStarships;
 
 						newStarships = starshipsResponse.map(function(value){
-							return formatStarshipsDetails(value);
+							return formatStarshipBasicDetails(value);
 						});
 
 						totalStarships = response.data.count;
@@ -121,6 +130,24 @@ angular.module('StarWarsApp')
 						callback(err);
 				});
 			}, 
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var starships = results.map(function(item){
+							return formatStarshipBasicDetails(item.data);
+						});
+						cb(null, starships);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			},
 
 			getNumberOfPages: function(){
 				return totalStarshipsPages;

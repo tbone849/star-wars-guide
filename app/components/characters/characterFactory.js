@@ -1,9 +1,9 @@
 angular.module('StarWarsApp')
-	.factory('characterFactory', ['$http', 'titleCase', 'urlsFactory', function($http, titleCase, urlsFactory){
+	.factory('characterFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
 
 		var people = [];
 		var totalCharacterPages;
-		var formatPersonBasicInfo = function(value){
+		var formatPersonBasicDetails = function(value){
 			return {
 				name: titleCase(value.name),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
@@ -20,6 +20,11 @@ angular.module('StarWarsApp')
 				gender: titleCase(value.gender),
 				height: parseNumberWithUnit(value.height, 'cm'),
 				mass: parseNumberWithUnit(value.mass, 'kg'),
+				homeworld_url: [value.homeworld],
+				film_urls: value.films,
+				species_urls: value.species,
+				vehicle_urls: value.vehicles,
+				starship_urls: value.starships,
 				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
@@ -53,26 +58,6 @@ angular.module('StarWarsApp')
 			return id;
 		};
 
-		var parseRelated = function(items, category){
-			if(category === 'films'){
-				var films = items.map(function(item){
-					return {
-						name: item.data.title,
-						url: '#/films/' + getIdFromUrl(item.data.url)
-					};
-				});
-				return films;
-			} else if (category === 'species' || category === 'characters' || category === 'vehicles' || category === 'starships' || category === 'planets' || category ==='planets'){
-				var related = items.map(function(item){
-					return {
-						name: item.data.name,
-						url: '#/' + category + '/' + getIdFromUrl(item.data.url)
-					};
-				});
-				return related;
-			}
-		};
-
 		return {
 			getAll: function(page, callback)	{
 				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
@@ -82,7 +67,7 @@ angular.module('StarWarsApp')
 						var totalPeople;
 
 						newPeople = peopleResponse.map(function(value){
-							return formatPersonBasicInfo(value);
+							return formatPersonBasicDetails(value);
 						});
 
 						totalPeople = response.data.count;
@@ -100,62 +85,29 @@ angular.module('StarWarsApp')
 				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
 					.then(function(response){
 						var person = formatPersonDetails(response.data);
-						// get related films
-						urlsFactory.getRelatedData(response.data.films,function(err, films){
-							if(err){
-								person.films.error = 'Error retrieving films.';
-								console.log(err);
-								return;
-							}
-							var relatedFilms = parseRelated(films, 'films');
-							person.films = relatedFilms;
-						});
-						// get related species
-						urlsFactory.getRelatedData(response.data.species,function(err, species){
-							if(err){
-								person.species.error = 'Error retrieving species.';
-								console.log(err);
-								return;
-							}
-							var relatedSpecies = parseRelated(species, 'species');
-							person.species = relatedSpecies;
-						});
-						// get related vehicles
-						urlsFactory.getRelatedData(response.data.vehicles,function(err, vehicles){
-							if(err){
-								person.vehicles.error = 'Error retrieving vehicles.';
-								console.log(err);
-								return;
-							}
-							var relatedVehicles = parseRelated(vehicles, 'vehicles');
-							person.vehicles = relatedVehicles;
-						});
-						// get related starships
-						urlsFactory.getRelatedData(response.data.starships,function(err, starships){
-							if(err){
-								person.starships.error = 'Error retrieving starships.';
-								console.log(err);
-								return;
-							}
-							var relatedStarships = parseRelated(starships, 'starships');
-							person.starships = relatedStarships;
-						});
-						// get related homeworld
-						var planet = [response.data.homeworld];
-						urlsFactory.getRelatedData(planet,function(err, planets){
-							if(err){
-								person.planets.error = 'Error retrieving planets.';
-								console.log(err);
-								return;
-							}
-							var relatedPlanets = parseRelated(planets, 'planets');
-							person.planets = relatedPlanets;
-						});
 						
 						callback(null, person);
 					}, function(err){
 						callback(err);
 				});
+			},
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var characters = results.map(function(item){
+							return formatPersonBasicDetails(item.data);
+						});
+						cb(null, characters);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
 			}, 
 
 			getNumberOfPages: function(){
