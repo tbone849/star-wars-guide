@@ -1,0 +1,19 @@
+<div flex-item class='related-card'>
+    <div class="card">
+        <div class="p+">
+            <strong class="fs-headline display-block">Related {{category}}</strong>
+        </div>
+        <div class="divider divider--dark"></div>
+        <ul class="list p+">
+            <li ng-repeat='item in data' class="list-row list-row--has-separator">
+                <div class="list-row__primary">
+                    <img ng-src="{{item.img_url}}" width="40" height="40" class="img-round" onerror="this.src='./assets/img/placeholder-small.jpg'">
+                </div>
+
+                <div class="list-row__content">
+                    <a class='card-link' ng-href='{{item.url}}'>{{item.name}}</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

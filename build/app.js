@@ -42,6 +42,7 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
     }]);
 angular.module('StarWarsApp')
 	.controller('characterController', ['$scope', '$http', 'characterFactory', 'filmFactory', 'speciesFactory', 'vehiclesFactory', 'starshipsFactory', 'planetsFactory', '$routeParams', function($scope, $http, characterFactory, filmFactory, speciesFactory, vehiclesFactory, starshipsFactory, planetsFactory, $routeParams){
+        
         var id = $routeParams.id;
 
 		characterFactory.getById(id, function(err, person) {
@@ -74,6 +75,7 @@ angular.module('StarWarsApp')
             vehiclesFactory.getByUrls(person.vehicle_urls, function(err, vehicles){
                 if(err){
                     console.log(err);
+                    return;
                 }
                 $scope.person.vehicles = vehicles;
             });
@@ -85,7 +87,7 @@ angular.module('StarWarsApp')
                 $scope.person.starships = starships;
             });
             
-            console.log($scope.person);
+            console.log($scope.person.vehicles);
             $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
             	{ url: '#/characters', name: 'Characters' }
@@ -1242,6 +1244,30 @@ angular.module('StarWarsApp')
 				scope.isCurrentPage = function(number){
 					return (number === parseInt(scope.currentPage));
 				};				
+			}
+		};
+	});
+angular.module('StarWarsApp')
+	.directive('relatedLinks', function(){
+		return {
+			restrict: 'E',
+			templateUrl: './directives/relatedLinks.html',
+			scope: {
+				category: "@",
+				data: "="
+			},
+			link: function(scope, element, attr){
+				scope.$watch('data', function(newValue, oldValue){
+					console.log(newValue);
+					if(newValue !== undefined){
+						if(newValue.length > 0){
+							element.removeClass('ng-hide');
+						}	
+					} else {
+						element.addClass('ng-hide');
+					}
+
+				});
 			}
 		};
 	});

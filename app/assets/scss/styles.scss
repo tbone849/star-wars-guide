@@ -43,12 +43,8 @@ html {
 	margin-bottom: -2em;
 }
 
-.categories-container {
-	margin: auto;
-	width: 90%;
-}
-
 .category {
+	margin-top: 2em;
 	margin-bottom: 2em;
 	@include span-columns(2);
 	@include media-query(palm) {
@@ -66,15 +62,7 @@ html {
 }
 
 .category-title {
-
-	@include media-query(desk) {
-    	font-size: 1em;
-	}
-
-	@include media-query(full-hd) {
-    	font-size: 1.5em;
-	}
-	
+	font-size: 1.25em;	
 }
 
 .content {
@@ -98,6 +86,16 @@ html {
 	}
 }
 
+.details-badge {
+	margin-bottom: 2em;
+}
+
+.related-card {
+	margin-right: 1.5em;
+	display: inline-block;
+	vertical-align: text-top;
+}
+
 .height-300 {
 	height: 300px;
 }
@@ -113,6 +111,7 @@ html {
 .breadcrumbs {
 	color: $white;
 	letter-spacing: .75em;
+	margin-bottom: 2em;
 	
 	a:link, a:visited, a:hover, a:active {
 		color: $light-blue-200;
