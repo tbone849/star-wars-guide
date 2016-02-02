@@ -9,6 +9,7 @@ angular.module('StarWarsApp')
 			},
 			link: function(scope, element, attr){
 				scope.currentPage = 1;
+				scope.hasData = false;
 				var items = [];
 				var slicePosition = 0;
 
@@ -31,13 +32,11 @@ angular.module('StarWarsApp')
 				scope.$watch('data', function(newValues, oldValues){
 					if(newValues !== undefined){
 						if(newValues.length > 0){
-							element.removeClass('ng-hide');
+							scope.hasData = true;
 							items = newValues;
 							scope.totalPages = Math.ceil(items.length / 5);
 							scope.chunk = items.slice(slicePosition, 5);
 						}	
-					} else {
-						element.addClass('ng-hide');
 					}
 				});
 

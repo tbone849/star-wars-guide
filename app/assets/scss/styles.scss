@@ -90,12 +90,6 @@ html {
 	margin-bottom: 2em;
 }
 
-.related-card {
-	margin-right: 1.5em;
-	display: inline-block;
-	vertical-align: text-top;
-}
-
 .height-300 {
 	height: 300px;
 }
@@ -146,9 +140,10 @@ html {
 	}
 }
 
+// test
 .related-card {
-	margin-bottom: 2em;
-	width: 15em;
+	@include span-columns(12/5);
+	
 }
 
 .list-paginate {

@@ -1,9 +1,10 @@
-<div flex-item class='related-card'>
+<div flex-item>
     <div class="card">
         <div class="p+">
             <strong class="fs-headline display-block">Related {{category}}</strong>
         </div>
         <div class="divider divider--dark"></div>
+        <div ng-hide='hasData' class='fs-subhead p+'>There are no related items for this category</div>
         <ul class="list p+">
             <li ng-repeat='item in chunk' class="list-row list-row--has-separator">
                 <div class="list-row__primary">
@@ -15,7 +16,7 @@
                 </div>
             </li>
         </ul>
-        <div class="divider divider--dark" ng-hide='totalPages === 1'></div>
+        <div class="divider divider--dark" ng-hide='totalPages === 1 || !hasData'></div>
         <div class='list-paginate'>
             <button 
                 ng-click='loadPrevious()' 
@@ -28,7 +29,7 @@
             <span ng-show='currentPage === 1 && totalPages > 1'>Next</span>
             <button 
                 ng-click='loadNext()' 
-                ng-hide='currentPage === totalPages' 
+                ng-hide='currentPage === totalPages || !hasData' 
                 class="btn btn--m btn--black btn--icon" 
                 lx-ripple>
                 <i class="mdi mdi-chevron-right"></i>
