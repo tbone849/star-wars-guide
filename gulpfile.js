@@ -53,7 +53,7 @@ gulp.task('styles', function() {
     .pipe(sass({
       includePaths: require('node-neat').with('./app/assets/libs/mdi/scss')
     }))
-    //.pipe(minifyCss({compatibility: 'ie8'}))
+    .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('styles.css'))
     .pipe(gulp.dest('build/assets/css'));
 });

@@ -30,6 +30,8 @@ angular.module('StarWarsApp')
 				hyperdrive_rating: value.hyperdrive_rating,
 				mglt: value.MGLT,
 				shipclass: titleCase(value.starship_class),
+				character_urls: value.pilots,
+				film_urls: value.films,
 				img_url: './assets/img/starships/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/starships/" + getIdFromUrl(value.url)

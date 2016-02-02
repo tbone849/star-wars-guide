@@ -4,7 +4,7 @@ angular.module('StarWarsApp')
 			restrict: 'E',
 			templateUrl: './directives/relatedLinks.html',
 			scope: {
-				category: "@",
+				header: "@",
 				data: "="
 			},
 			link: function(scope, element, attr){

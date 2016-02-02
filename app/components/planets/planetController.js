@@ -1,5 +1,5 @@
 angular.module('StarWarsApp')
-	.controller('planetController', ['$scope', '$http', 'planetsFactory', '$routeParams', function($scope, $http, planetsFactory, $routeParams){
+	.controller('planetController', ['$scope', '$http', 'planetsFactory', 'filmFactory', 'characterFactory', '$routeParams', function($scope, $http, planetsFactory, filmFactory, characterFactory, $routeParams){
         var id = $routeParams.id;
 
 		planetsFactory.getById(id, function(err, planet) {
@@ -7,7 +7,21 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.planet = planet;
-            console.log($scope.planet);
+            
+            characterFactory.getByUrls(planet.character_urls, function(err, characters){
+                if(err){
+                    console.log(err);
+                }
+                $scope.planet.characters = characters;
+            });
+
+            filmFactory.getByUrls(planet.film_urls, function(err, films){
+                if(err){
+                    console.log(err);
+                }
+                $scope.planet.films = films;
+            });
+
             $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
             	{ url: '#/planets', name: 'Planets' }

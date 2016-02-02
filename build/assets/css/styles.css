@@ -12105,7 +12105,8 @@ html {
   float: left;
   display: block;
   margin-right: 2.35765%;
-  width: 18.11388%; }
+  width: 18.11388%;
+  margin-bottom: 1em; }
   .related-card:last-child {
     margin-right: 0; }
 

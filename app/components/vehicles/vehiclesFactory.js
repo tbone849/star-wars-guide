@@ -28,6 +28,8 @@ angular.module('StarWarsApp')
 				cargo_capacity: formatWeight(value.cargo_capacity),
 				consumables: titleCase(value.consumables),
 				vehicle_class: titleCase(value.vehicle_class),
+				character_urls: value.pilots,
+				film_urls: value.films,
 				img_url: './assets/img/vehicles/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/vehicles/" + getIdFromUrl(value.url)

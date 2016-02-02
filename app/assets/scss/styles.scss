@@ -143,7 +143,7 @@ html {
 // test
 .related-card {
 	@include span-columns(12/5);
-	
+	margin-bottom: 1em;	
 }
 
 .list-paginate {

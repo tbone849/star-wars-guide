@@ -23,6 +23,8 @@ angular.module('StarWarsApp')
 				terrain: titleCase(value.terrain),
 				water: parseNumberWithUnit(value.surface_water, '%'),
 				population: parseNumber(value.population),
+				character_urls: value.residents,
+				film_urls: value.films,
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/planets/" + getIdFromUrl(value.url)
