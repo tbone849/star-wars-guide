@@ -146,3 +146,19 @@ html {
 	}
 }
 
+.card {
+	margin-bottom: 2em;
+	min-width: 20em;
+}
+
+.characters {
+	float: left;
+	ul {
+		width: 32em;
+	}
+	li {
+		float: left;
+		width: 15em;
+	}
+}
+

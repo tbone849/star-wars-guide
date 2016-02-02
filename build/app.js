@@ -250,7 +250,7 @@ angular.module('StarWarsApp')
          
 	}]);
 angular.module('StarWarsApp')
-	.controller('filmController', ['$scope', '$http', 'filmFactory', '$routeParams', function($scope, $http, filmFactory, $routeParams){
+	.controller('filmController', ['$scope', '$http', 'filmFactory', 'characterFactory', 'speciesFactory', 'vehiclesFactory', 'starshipsFactory', 'planetsFactory', '$routeParams', function($scope, $http, filmFactory, characterFactory, speciesFactory, vehiclesFactory, starshipsFactory, planetsFactory, $routeParams){
 
         var id = $routeParams.id;
 
@@ -259,6 +259,44 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.film = film;
+
+            characterFactory.getByUrls(film.character_urls, function(err, characters){
+                if(err){
+                    console.log(err);
+                }
+                $scope.film.characters = characters;
+            });
+
+            planetsFactory.getByUrls(film.planet_urls, function(err, planets){
+                if(err){
+                    console.log(err);
+                }
+                $scope.film.planets = planets;
+            });
+
+            speciesFactory.getByUrls(film.species_urls, function(err, species){
+                if(err){
+                    console.log(err);
+                }
+                $scope.film.species = species;
+            });
+
+            starshipsFactory.getByUrls(film.starship_urls, function(err, starships){
+                if(err){
+                    console.log(err);
+                }
+                $scope.film.starships = starships;
+            });
+
+            vehiclesFactory.getByUrls(film.vehicle_urls, function(err, vehicles){
+                if(err){
+                    console.log(err);
+                }
+                $scope.film.vehicles = vehicles;
+            });
+
+            console.log($scope.film);
+
             $scope.crumbs = [
             	{ url: '#/', name: 'Home' },
             	{ url: '#/films', name: 'Films' }
@@ -504,7 +542,7 @@ angular.module('StarWarsApp')
 
 		var formatPlanetBasicDetails = function(value){
 			return {
-				name: value.name,
+				name: titleCase(value.name),
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				url: "#/planets/" + getIdFromUrl(value.url)
 			};
@@ -512,7 +550,7 @@ angular.module('StarWarsApp')
 
 		var formatPlanetsDetails = function(value){
 			return {
-				name: value.name,
+				name: titleCase(value.name),
 				rotation_period: parseNumberWithUnit(value.rotation_period, ' days'),
 				orbital_period: parseNumberWithUnit(value.orbital_period, ' days'),
 				diameter: parseNumberWithUnit(value.diameter, 'km'),

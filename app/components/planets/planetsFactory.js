@@ -6,7 +6,7 @@ angular.module('StarWarsApp')
 
 		var formatPlanetBasicDetails = function(value){
 			return {
-				name: value.name,
+				name: titleCase(value.name),
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				url: "#/planets/" + getIdFromUrl(value.url)
 			};
@@ -14,7 +14,7 @@ angular.module('StarWarsApp')
 
 		var formatPlanetsDetails = function(value){
 			return {
-				name: value.name,
+				name: titleCase(value.name),
 				rotation_period: parseNumberWithUnit(value.rotation_period, ' days'),
 				orbital_period: parseNumberWithUnit(value.orbital_period, ' days'),
 				diameter: parseNumberWithUnit(value.diameter, 'km'),
