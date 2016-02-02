@@ -8,6 +8,7 @@ angular.module('StarWarsApp')
 			return {
 				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
+				id: parseInt(value.episode_id),
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
 		};
