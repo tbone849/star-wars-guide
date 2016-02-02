@@ -44,7 +44,7 @@ angular.module('StarWarsApp')
                 $scope.film.vehicles = vehicles;
             });
 
-            console.log($scope.film);
+            //console.log($scope.film);
 
             $scope.crumbs = [
             	{ url: '#/', name: 'Home' },

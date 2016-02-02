@@ -146,19 +146,17 @@ html {
 	}
 }
 
-.card {
+.related-card {
 	margin-bottom: 2em;
-	min-width: 20em;
+	width: 15em;
 }
 
-.characters {
-	float: left;
-	ul {
-		width: 32em;
-	}
-	li {
-		float: left;
-		width: 15em;
+.list-paginate {
+	text-align: center;
+	margin: 1em auto;
+	button {
+		vertical-align: middle;
 	}
 }
+
 

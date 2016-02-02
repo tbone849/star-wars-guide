@@ -5,7 +5,7 @@
         </div>
         <div class="divider divider--dark"></div>
         <ul class="list p+">
-            <li ng-repeat='item in data' class="list-row list-row--has-separator">
+            <li ng-repeat='item in chunk' class="list-row list-row--has-separator">
                 <div class="list-row__primary">
                     <img ng-src="{{item.img_url}}" width="40" height="40" class="img-round" onerror="this.src='./assets/img/placeholder-small.jpg'">
                 </div>
@@ -15,5 +15,24 @@
                 </div>
             </li>
         </ul>
+        <div class="divider divider--dark" ng-hide='totalPages === 1'></div>
+        <div class='list-paginate'>
+            <button 
+                ng-click='loadPrevious()' 
+                ng-hide='currentPage === 1' 
+                class="btn btn--m btn--black btn--icon" 
+                lx-ripple>
+                <i class="mdi mdi-chevron-left"></i>
+            </button>
+            <span ng-show='currentPage === totalPages && totalPages > 1'>Previous</span>
+            <span ng-show='currentPage === 1 && totalPages > 1'>Next</span>
+            <button 
+                ng-click='loadNext()' 
+                ng-hide='currentPage === totalPages' 
+                class="btn btn--m btn--black btn--icon" 
+                lx-ripple>
+                <i class="mdi mdi-chevron-right"></i>
+            </button>
+        </div>
     </div>
 </div>
