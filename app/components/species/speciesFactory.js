@@ -17,7 +17,7 @@ angular.module('StarWarsApp')
 				name: titleCase(value.name),
 				classification: titleCase(value.classification),
 				designation: titleCase(value.designation),
-				avg_height: value.average_height + 'cm',
+				avg_height: parseNumberWithUnit(value.average_height, 'cm'),
 				skin_colors: titleCase(value.skin_colors),
 				hair_colors: titleCase(value.hair_colors),
 				eye_colors: titleCase(value.eye_colors),

@@ -41,6 +41,215 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
+	.controller('characterController', ['$scope', '$http', 'characterFactory', 'filmFactory', 'speciesFactory', 'vehiclesFactory', 'starshipsFactory', 'planetsFactory', '$routeParams', function($scope, $http, characterFactory, filmFactory, speciesFactory, vehiclesFactory, starshipsFactory, planetsFactory, $routeParams){
+        
+        var id = $routeParams.id;
+
+		characterFactory.getById(id, function(err, person) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.person = person;
+
+            filmFactory.getByUrls(person.film_urls, function(err, films){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.films = films;
+            });
+
+            planetsFactory.getByUrls(person.homeworld_url, function(err, homeworld){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.homeworld = homeworld[0];
+            });
+
+            speciesFactory.getByUrls(person.species_urls, function(err, species){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.species = species[0];
+            });
+
+            vehiclesFactory.getByUrls(person.vehicle_urls, function(err, vehicles){
+                if(err){
+                    console.log(err);
+                    return;
+                }
+                $scope.person.vehicles = vehicles;
+            });
+
+            starshipsFactory.getByUrls(person.starship_urls, function(err, starships){
+                if(err){
+                    console.log(err);
+                }
+                $scope.person.starships = starships;
+            });
+            
+            console.log($scope.person.vehicles);
+            $scope.crumbs = [
+            	{ url: '#/', name: 'Home' },
+            	{ url: '#/characters', name: 'Characters' }
+            ];
+            $scope.pageTitle = $scope.person.name;
+        });    
+	}]);
+angular.module('StarWarsApp')
+	.factory('characterFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
+
+		var people = [];
+		var totalCharacterPages;
+		var formatPersonBasicDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
+				url: '#/characters/' + getIdFromUrl(value.url)
+			};
+		};
+
+		var formatPersonDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				birth_year: parseNumber(value.birth_year),
+				hair_color: titleCase(value.hair_color),
+				skin_color: titleCase(value.skin_color),
+				gender: titleCase(value.gender),
+				height: parseNumberWithUnit(value.height, 'cm'),
+				mass: parseNumberWithUnit(value.mass, 'kg'),
+				homeworld_url: [value.homeworld],
+				film_urls: value.films,
+				species_urls: value.species,
+				vehicle_urls: value.vehicles,
+				starship_urls: value.starships,
+				id: parseInt(getIdFromUrl(value.url)),
+				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
+				url: '#/characters/' + getIdFromUrl(value.url)
+			};
+		};
+
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
+				return {
+					unit: titleCase(value)
+				};
+			}
+
+			return {
+				number: value,
+				unit: unit
+			};
+		};
+
+		var parseNumber = function(value){
+			if(value === 'unknown'){
+				return 'Unknown';
+			}
+
+			return value;
+		};
+
+		var getIdFromUrl = function(value){
+			var id = value.match(/([0-9])+/g);
+			id = id[0];
+			return id;
+		};
+
+		return {
+			getAll: function(page, callback)	{
+				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
+					.then(function(response) {
+						var peopleResponse = response.data.results;
+						var newPeople = [];
+						var totalPeople;
+
+						newPeople = peopleResponse.map(function(value){
+							return formatPersonBasicDetails(value);
+						});
+
+						totalPeople = response.data.count;
+						totalCharacterPages = Math.ceil(totalPeople / 10);
+
+						people = newPeople;
+
+						callback(null, people);
+					}, function(err) {
+						callback(err);
+				});
+			},
+
+			getById: function(id, callback){
+				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
+					.then(function(response){
+						var person = formatPersonDetails(response.data);
+						
+						callback(null, person);
+					}, function(err){
+						callback(err);
+				});
+			},
+
+			getByUrls: function(urls, cb){
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var characters = results.map(function(item){
+							return formatPersonBasicDetails(item.data);
+						});
+						cb(null, characters);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			}, 
+
+			getNumberOfPages: function(){
+				return totalCharacterPages;
+			}
+		};
+	}]);
+angular.module('StarWarsApp')
+	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
+
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' }
+        ];
+        $scope.pageTitle = 'Characters';
+
+        var pageCache = $cookies.get('currentCharacterPage');
+        if(pageCache){
+            $scope.currentPage = pageCache;
+        } else {
+            $scope.currentPage = 1;
+        }
+
+		characterFactory.getAll($scope.currentPage, function(err, people) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.characters = people;
+            var numberOfPages = characterFactory.getNumberOfPages();
+            $scope.pages = _.range(1, numberOfPages+1);
+        });
+
+        $scope.getNewPage = function(newPageNumber){
+            $cookies.put('currentCharacterPage', newPageNumber);
+            characterFactory.getAll(newPageNumber, function(err, people) {
+                if(err) {
+                    return console.log(err);
+                }
+                $scope.characters = people;
+                $scope.currentPage = newPageNumber;
+
+            });
+        };
+         
+	}]);
+angular.module('StarWarsApp')
 	.controller('filmController', ['$scope', '$http', 'filmFactory', 'characterFactory', 'speciesFactory', 'vehiclesFactory', 'starshipsFactory', 'planetsFactory', '$routeParams', function($scope, $http, filmFactory, characterFactory, speciesFactory, vehiclesFactory, starshipsFactory, planetsFactory, $routeParams){
 
         var id = $routeParams.id;
@@ -460,215 +669,6 @@ angular.module('StarWarsApp')
 		};
 	}]);
 angular.module('StarWarsApp')
-	.controller('characterController', ['$scope', '$http', 'characterFactory', 'filmFactory', 'speciesFactory', 'vehiclesFactory', 'starshipsFactory', 'planetsFactory', '$routeParams', function($scope, $http, characterFactory, filmFactory, speciesFactory, vehiclesFactory, starshipsFactory, planetsFactory, $routeParams){
-        
-        var id = $routeParams.id;
-
-		characterFactory.getById(id, function(err, person) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.person = person;
-
-            filmFactory.getByUrls(person.film_urls, function(err, films){
-                if(err){
-                    console.log(err);
-                }
-                $scope.person.films = films;
-            });
-
-            planetsFactory.getByUrls(person.homeworld_url, function(err, homeworld){
-                if(err){
-                    console.log(err);
-                }
-                $scope.person.homeworld = homeworld[0];
-            });
-
-            speciesFactory.getByUrls(person.species_urls, function(err, species){
-                if(err){
-                    console.log(err);
-                }
-                $scope.person.species = species[0];
-            });
-
-            vehiclesFactory.getByUrls(person.vehicle_urls, function(err, vehicles){
-                if(err){
-                    console.log(err);
-                    return;
-                }
-                $scope.person.vehicles = vehicles;
-            });
-
-            starshipsFactory.getByUrls(person.starship_urls, function(err, starships){
-                if(err){
-                    console.log(err);
-                }
-                $scope.person.starships = starships;
-            });
-            
-            console.log($scope.person.vehicles);
-            $scope.crumbs = [
-            	{ url: '#/', name: 'Home' },
-            	{ url: '#/characters', name: 'Characters' }
-            ];
-            $scope.pageTitle = $scope.person.name;
-        });    
-	}]);
-angular.module('StarWarsApp')
-	.factory('characterFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
-
-		var people = [];
-		var totalCharacterPages;
-		var formatPersonBasicDetails = function(value){
-			return {
-				name: titleCase(value.name),
-				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
-				url: '#/characters/' + getIdFromUrl(value.url)
-			};
-		};
-
-		var formatPersonDetails = function(value){
-			return {
-				name: titleCase(value.name),
-				birth_year: parseNumber(value.birth_year),
-				hair_color: titleCase(value.hair_color),
-				skin_color: titleCase(value.skin_color),
-				gender: titleCase(value.gender),
-				height: parseNumberWithUnit(value.height, 'cm'),
-				mass: parseNumberWithUnit(value.mass, 'kg'),
-				homeworld_url: [value.homeworld],
-				film_urls: value.films,
-				species_urls: value.species,
-				vehicle_urls: value.vehicles,
-				starship_urls: value.starships,
-				id: parseInt(getIdFromUrl(value.url)),
-				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
-				url: '#/characters/' + getIdFromUrl(value.url)
-			};
-		};
-
-		var parseNumberWithUnit = function(value, unit){
-			if(isNaN(value)){
-				return {
-					unit: titleCase(value)
-				};
-			}
-
-			return {
-				number: value,
-				unit: unit
-			};
-		};
-
-		var parseNumber = function(value){
-			if(value === 'unknown'){
-				return 'Unknown';
-			}
-
-			return value;
-		};
-
-		var getIdFromUrl = function(value){
-			var id = value.match(/([0-9])+/g);
-			id = id[0];
-			return id;
-		};
-
-		return {
-			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
-					.then(function(response) {
-						var peopleResponse = response.data.results;
-						var newPeople = [];
-						var totalPeople;
-
-						newPeople = peopleResponse.map(function(value){
-							return formatPersonBasicDetails(value);
-						});
-
-						totalPeople = response.data.count;
-						totalCharacterPages = Math.ceil(totalPeople / 10);
-
-						people = newPeople;
-
-						callback(null, people);
-					}, function(err) {
-						callback(err);
-				});
-			},
-
-			getById: function(id, callback){
-				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
-					.then(function(response){
-						var person = formatPersonDetails(response.data);
-						
-						callback(null, person);
-					}, function(err){
-						callback(err);
-				});
-			},
-
-			getByUrls: function(urls, cb){
-				var urlCalls = urls.map(function(url) {
-					return $http.get(url, {cache:true});
-				});
-
-				$q.all(urlCalls, cb)
-					.then(function(results) {
-						var characters = results.map(function(item){
-							return formatPersonBasicDetails(item.data);
-						});
-						cb(null, characters);
-					},
-					function(err) {
-						cb(err);
-					}
-				);
-			}, 
-
-			getNumberOfPages: function(){
-				return totalCharacterPages;
-			}
-		};
-	}]);
-angular.module('StarWarsApp')
-	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
-
-        $scope.crumbs = [
-            { url: '#/', name: 'Home' }
-        ];
-        $scope.pageTitle = 'Characters';
-
-        var pageCache = $cookies.get('currentCharacterPage');
-        if(pageCache){
-            $scope.currentPage = pageCache;
-        } else {
-            $scope.currentPage = 1;
-        }
-
-		characterFactory.getAll($scope.currentPage, function(err, people) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.characters = people;
-            var numberOfPages = characterFactory.getNumberOfPages();
-            $scope.pages = _.range(1, numberOfPages+1);
-        });
-
-        $scope.getNewPage = function(newPageNumber){
-            $cookies.put('currentCharacterPage', newPageNumber);
-            characterFactory.getAll(newPageNumber, function(err, people) {
-                if(err) {
-                    return console.log(err);
-                }
-                $scope.characters = people;
-                $scope.currentPage = newPageNumber;
-
-            });
-        };
-         
-	}]);
-angular.module('StarWarsApp')
 	.controller('specieController', ['$scope', '$http', 'speciesFactory', 'characterFactory', 'filmFactory', '$routeParams', function($scope, $http, speciesFactory, characterFactory, filmFactory, $routeParams){
         var id = $routeParams.id;
 
@@ -755,7 +755,7 @@ angular.module('StarWarsApp')
 				name: titleCase(value.name),
 				classification: titleCase(value.classification),
 				designation: titleCase(value.designation),
-				avg_height: value.average_height + 'cm',
+				avg_height: parseNumberWithUnit(value.average_height, 'cm'),
 				skin_colors: titleCase(value.skin_colors),
 				hair_colors: titleCase(value.hair_colors),
 				eye_colors: titleCase(value.eye_colors),
