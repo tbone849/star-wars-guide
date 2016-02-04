@@ -30,8 +30,8 @@ angular.module('StarWarsApp')
 				hyperdrive_rating: value.hyperdrive_rating,
 				mglt: value.MGLT,
 				shipclass: titleCase(value.starship_class),
-				character_urls: value.pilots,
-				film_urls: value.films,
+				characterUrls: value.pilots,
+				filmUrls: value.films,
 				img_url: './assets/img/starships/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/starships/" + getIdFromUrl(value.url)
@@ -134,6 +134,11 @@ angular.module('StarWarsApp')
 			}, 
 
 			getByUrls: function(urls, cb){
+
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+				
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});

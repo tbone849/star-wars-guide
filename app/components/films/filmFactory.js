@@ -21,11 +21,11 @@ angular.module('StarWarsApp')
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
-				character_urls: value.characters,
-				planet_urls: value.planets,
-				starship_urls: value.starships,
-				vehicle_urls: value.vehicles,
-				species_urls: value.species,
+				characterUrls: value.characters,
+				planetUrls: value.planets,
+				starshipUrls: value.starships,
+				vehicleUrls: value.vehicles,
+				speciesUrls: value.species,
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
@@ -116,6 +116,10 @@ angular.module('StarWarsApp')
 			},
 
 			getByUrls: function(urls, cb){
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});

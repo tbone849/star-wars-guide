@@ -5,11 +5,13 @@ angular.module('StarWarsApp')
 			templateUrl: './directives/relatedLinks.html',
 			scope: {
 				header: "@",
-				data: "="
+				factory: '=',
+				urls: '='
 			},
-			link: function(scope, element, attr){
+			link: function(scope, element, attrs){
 				scope.currentPage = 1;
 				scope.hasData = false;
+				var factory = element.injector().get(attrs.factory);
 				var items = [];
 				var slicePosition = 0;
 
@@ -29,15 +31,19 @@ angular.module('StarWarsApp')
 					scope.chunk = items.slice(slicePosition, slicePosition + 5);
 				};
 
-				scope.$watch('data', function(newValues, oldValues){
-					if(newValues !== undefined){
-						if(newValues.length > 0){
+				scope.$watch('urls', function(newUrls){
+					factory.getByUrls(newUrls, function(err, data){
+						if(err){
+							return console.log(err);
+						}
+						if(data && data.length){
 							scope.hasData = true;
-							items = newValues;
+							items = data;
 							scope.totalPages = Math.ceil(items.length / 5);
 							scope.chunk = items.slice(slicePosition, 5);
-						}	
-					}
+						}
+
+					});
 				});
 
 			}

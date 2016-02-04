@@ -23,8 +23,8 @@ angular.module('StarWarsApp')
 				eye_colors: titleCase(value.eye_colors),
 				lifespan: parseNumberWithUnit(value.average_lifespan, ' years'),
 				language: titleCase(value.language),
-				character_urls: value.people,
-				film_urls: value.films,
+				characterUrls: value.people,
+				filmUrls: value.films,
 				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/species/" + getIdFromUrl(value.url)
@@ -87,6 +87,10 @@ angular.module('StarWarsApp')
 			}, 
 
 			getByUrls: function(urls, cb){
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+				
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});

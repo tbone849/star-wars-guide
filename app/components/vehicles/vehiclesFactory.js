@@ -28,8 +28,8 @@ angular.module('StarWarsApp')
 				cargo_capacity: formatWeight(value.cargo_capacity),
 				consumables: titleCase(value.consumables),
 				vehicle_class: titleCase(value.vehicle_class),
-				character_urls: value.pilots,
-				film_urls: value.films,
+				characterUrls: value.pilots,
+				filmUrls: value.films,
 				img_url: './assets/img/vehicles/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/vehicles/" + getIdFromUrl(value.url)
@@ -132,6 +132,10 @@ angular.module('StarWarsApp')
 			}, 
 
 			getByUrls: function(urls, cb){
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+				
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});

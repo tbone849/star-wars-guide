@@ -23,8 +23,8 @@ angular.module('StarWarsApp')
 				terrain: titleCase(value.terrain),
 				water: parseNumberWithUnit(value.surface_water, '%'),
 				population: parseNumber(value.population),
-				character_urls: value.residents,
-				film_urls: value.films,
+				characterUrls: value.residents,
+				filmUrls: value.films,
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/planets/" + getIdFromUrl(value.url)
@@ -95,6 +95,10 @@ angular.module('StarWarsApp')
 			}, 
 
 			getByUrls: function(urls, cb){
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+				
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});

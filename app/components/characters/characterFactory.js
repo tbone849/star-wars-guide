@@ -21,10 +21,10 @@ angular.module('StarWarsApp')
 				height: parseNumberWithUnit(value.height, 'cm'),
 				mass: parseNumberWithUnit(value.mass, 'kg'),
 				homeworld_url: [value.homeworld],
-				film_urls: value.films,
-				species_urls: value.species,
-				vehicle_urls: value.vehicles,
-				starship_urls: value.starships,
+				filmUrls: value.films,
+				speciesUrls: value.species,
+				vehicleUrls: value.vehicles,
+				starshipUrls: value.starships,
 				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
@@ -93,6 +93,10 @@ angular.module('StarWarsApp')
 			},
 
 			getByUrls: function(urls, cb){
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});
