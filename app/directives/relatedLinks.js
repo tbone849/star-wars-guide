@@ -10,6 +10,7 @@ angular.module('StarWarsApp')
 			},
 			link: function(scope, element, attrs){
 				scope.currentPage = 1;
+				scope.hasError = false;
 				scope.hasData = false;
 				var factory = element.injector().get(attrs.factory);
 				var items = [];
@@ -34,6 +35,8 @@ angular.module('StarWarsApp')
 				scope.$watch('urls', function(newUrls){
 					factory.getByUrls(newUrls, function(err, data){
 						if(err){
+							scope.hasError = true;
+							scope.err = 'An error occured. Please try again later.';
 							return console.log(err);
 						}
 						if(data && data.length){

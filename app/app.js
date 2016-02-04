@@ -32,7 +32,7 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/vehicles/id/:id', {
             templateUrl : 'components/vehicles/vehicle.html',
             controller : 'vehicleController'
-        }).when('/planets/page=:page', {
+        }).when('/planets/page:page', {
             templateUrl : 'components/planets/planets.html',
             controller : 'planetsController'
         }).when('/planets/id/:id', {

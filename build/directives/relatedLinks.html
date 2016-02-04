@@ -4,6 +4,7 @@
             <strong class="fs-headline display-block">{{header}}</strong>
         </div>
         <div class="divider divider--dark"></div>
+        <div ng-show='hasError' class='fs-subhead p+'>{{err}}</div>
         <div ng-hide='hasData' class='fs-subhead p+'>There are no related items for this category</div>
         <ul class="list p+">
             <li ng-repeat='item in chunk' class="list-row list-row--has-separator">

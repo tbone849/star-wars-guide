@@ -32,7 +32,7 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).when('/vehicles/id/:id', {
             templateUrl : 'components/vehicles/vehicle.html',
             controller : 'vehicleController'
-        }).when('/planets/page=:page', {
+        }).when('/planets/page:page', {
             templateUrl : 'components/planets/planets.html',
             controller : 'planetsController'
         }).when('/planets/id/:id', {
@@ -1178,6 +1178,7 @@ angular.module('StarWarsApp')
 			},
 			link: function(scope, element, attrs){
 				scope.currentPage = 1;
+				scope.hasError = false;
 				scope.hasData = false;
 				var factory = element.injector().get(attrs.factory);
 				var items = [];
@@ -1202,6 +1203,8 @@ angular.module('StarWarsApp')
 				scope.$watch('urls', function(newUrls){
 					factory.getByUrls(newUrls, function(err, data){
 						if(err){
+							scope.hasError = true;
+							scope.err = 'An error occured. Please try again later.';
 							return console.log(err);
 						}
 						if(data && data.length){
