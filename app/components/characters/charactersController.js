@@ -1,17 +1,11 @@
 angular.module('StarWarsApp')
-	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$cookies', function($scope, $http, characterFactory, _, $cookies){
+	.controller('charactersController', ['$scope', '$http', 'characterFactory', '_', '$routeParams', '$location', function($scope, $http, characterFactory, _, $routeParams, $location){
 
         $scope.crumbs = [
             { url: '#/', name: 'Home' }
         ];
         $scope.pageTitle = 'Characters';
-
-        var pageCache = $cookies.get('currentCharacterPage');
-        if(pageCache){
-            $scope.currentPage = pageCache;
-        } else {
-            $scope.currentPage = 1;
-        }
+        $scope.currentPage = $routeParams.page;
 
 		characterFactory.getAll($scope.currentPage, function(err, people) {
             if(err) {
@@ -23,15 +17,7 @@ angular.module('StarWarsApp')
         });
 
         $scope.getNewPage = function(newPageNumber){
-            $cookies.put('currentCharacterPage', newPageNumber);
-            characterFactory.getAll(newPageNumber, function(err, people) {
-                if(err) {
-                    return console.log(err);
-                }
-                $scope.characters = people;
-                $scope.currentPage = newPageNumber;
-
-            });
+            $location.path('/characters/page=' + newPageNumber);
         };
          
 	}]);

@@ -9,7 +9,7 @@ angular.module('StarWarsApp')
 				name: 'Episode ' + getRomanNumeral(value.episode_id) + ': ' + value.title,
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
 				id: parseInt(value.episode_id),
-				url: "#/films/" + getIdFromUrl(value.url)
+				url: "#/films/id/" + getIdFromUrl(value.url)
 			};
 		};
 
@@ -27,7 +27,7 @@ angular.module('StarWarsApp')
 				vehicleUrls: value.vehicles,
 				speciesUrls: value.species,
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
-				url: "#/films/" + getIdFromUrl(value.url)
+				url: "#/films/id/" + getIdFromUrl(value.url)
 			};
 		};
 

@@ -1,17 +1,11 @@
 angular.module('StarWarsApp')
-	.controller('vehiclesController', ['$scope', '$http', 'vehiclesFactory', '_', '$cookies', function($scope, $http, vehiclesFactory, _, $cookies){
+	.controller('vehiclesController', ['$scope', '$http', 'vehiclesFactory', '_', '$routeParams', '$location', function($scope, $http, vehiclesFactory, _, $routeParams, $location){
 
         $scope.crumbs = [
             { url: '#/', name: 'Home' }
         ];
         $scope.pageTitle = 'Vehicles';
-        
-        var pageCache = $cookies.get('currentVehiclesPage');
-        if(pageCache){
-            $scope.currentPage = pageCache;
-        } else {
-            $scope.currentPage = 1;
-        }
+        $scope.currentPage = $routeParams.page;
 
 		vehiclesFactory.getAll($scope.currentPage, function(err, vehicles) {
             if(err) {
@@ -23,15 +17,7 @@ angular.module('StarWarsApp')
         });
 
         $scope.getNewPage = function(newPageNumber){
-            $cookies.put('currentVehiclesPage', newPageNumber);
-            vehiclesFactory.getAll(newPageNumber, function(err, vehicles) {
-                if(err) {
-                    return console.log(err);
-                }
-                $scope.vehicles = vehicles;
-                $scope.currentPage = newPageNumber;
-
-            });
+            $location.path('/vehicles/page=' + newPageNumber);
         };
          
 	}]);
