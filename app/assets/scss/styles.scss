@@ -26,6 +26,54 @@ html {
 	font-family: "biko";
 }
 
+header {
+	height: 300px;
+}
+
+.view-container {
+	min-height: calc(100vh - 500px);
+}
+
+footer {
+	color: $white;
+	width: 70%;
+	margin: 0 auto;
+	clear: both;
+	height: 200px;
+	display: table;
+	.footer-content {
+		display: table-cell;
+		vertical-align: bottom;
+	}
+	.copyright {
+		float: right;
+		letter-spacing: .25em;
+	}
+	.find-me {
+		padding-bottom: 2em;
+	}
+	.follow {
+		letter-spacing: .25em;
+		margin-right: 1em;
+	}
+
+	.disclaimer {
+		text-align: center;
+		padding-bottom: 1em;
+	}
+}
+
+footer a{
+	&:link, &:visited, &:hover, &:active{
+		color: $light-blue-200;
+		text-decoration: none;
+	}
+}
+
+.find-me a {
+	margin-right: 1em;
+}
+
 .logo {
 	text-align: center;
 }
@@ -153,6 +201,8 @@ html {
 		vertical-align: middle;
 	}
 }
+
+
 
 
 
