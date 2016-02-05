@@ -5,7 +5,7 @@ angular.module('StarWarsApp')
 
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/films', name: 'Films' }
+            { url: '#/films/page=1', name: 'Films' }
         ];
 
 		filmFactory.getById(id, function(err, film) {

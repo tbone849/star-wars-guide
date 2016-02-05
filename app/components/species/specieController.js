@@ -3,7 +3,7 @@ angular.module('StarWarsApp')
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/species', name: 'Species' },
+            { url: '#/species/page=1', name: 'Species' },
         ];
 
 		speciesFactory.getById(id, function(err, specie) {

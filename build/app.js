@@ -41,12 +41,12 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
         }).otherwise('/');
     }]);
 angular.module('StarWarsApp')
-	.controller('characterController', ['$scope', '$http', 'characterFactory', '$routeParams', function($scope, $http, characterFactory, $routeParams){
+	.controller('characterController', ['$scope', '$http', 'characterFactory', 'planetsFactory', 'speciesFactory', '$routeParams', function($scope, $http, characterFactory, planetsFactory, speciesFactory, $routeParams){
         
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/characters', name: 'Characters' }
+            { url: '#/characters/page=1', name: 'Characters' }
         ];
 
 		characterFactory.getById(id, function(err, person) {
@@ -54,6 +54,21 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.person = person;
+
+            planetsFactory.getByUrls(person.homeworld_url, function(err, homeworld){
+                if(err) {
+                    console.log(err);
+                }
+                $scope.person.homeworld = homeworld[0];
+            });
+
+            speciesFactory.getByUrls(person.speciesUrls, function(err, species){
+                if(err) {
+                    console.log(err);
+                }
+                $scope.person.species = species[0];
+            });
+            
             
             $scope.pageTitle = $scope.person.name;
         });    
@@ -209,7 +224,7 @@ angular.module('StarWarsApp')
 
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/films', name: 'Films' }
+            { url: '#/films/page=1', name: 'Films' }
         ];
 
 		filmFactory.getById(id, function(err, film) {
@@ -394,7 +409,7 @@ angular.module('StarWarsApp')
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/planets', name: 'Planets' }
+            { url: '#/planets/page=1', name: 'Planets' }
         ];
 
 		planetsFactory.getById(id, function(err, planet) {
@@ -553,11 +568,166 @@ angular.module('StarWarsApp')
 		};
 	}]);
 angular.module('StarWarsApp')
+	.controller('specieController', ['$scope', '$http', 'speciesFactory', '$routeParams', function($scope, $http, speciesFactory, $routeParams){
+        var id = $routeParams.id;
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' },
+            { url: '#/species/page=1', name: 'Species' },
+        ];
+
+		speciesFactory.getById(id, function(err, specie) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.specie = specie;
+
+            $scope.pageTitle = $scope.specie.name;
+        });    
+	}]);
+angular.module('StarWarsApp')
+	.controller('speciesController', ['$scope', '$http', 'speciesFactory', '_', '$routeParams', '$location', function($scope, $http, speciesFactory, _, $routeParams, $location){
+
+        $scope.crumbs = [
+            { url: '#/', name: 'Home' },
+        ];
+        $scope.pageTitle = 'Species';
+        $scope.currentPage = $routeParams.page;
+
+		speciesFactory.getAll($scope.currentPage, function(err, species) {
+            if(err) {
+                return console.log(err);
+            }
+            $scope.species = species;
+            var numberOfPages = speciesFactory.getNumberOfPages();
+            $scope.pages = _.range(1, numberOfPages+1);
+        });
+
+        $scope.getNewPage = function(newPageNumber){
+            $location.path('/species/page=' + newPageNumber);
+        };
+         
+	}]);
+angular.module('StarWarsApp')
+	.factory('speciesFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
+
+		var species = [];
+		var totalSpeciesPages;
+
+		var formatSpeciesBasicDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				url: "#/species/id/" + getIdFromUrl(value.url)
+			};
+		};
+
+		var formatSpeciesDetails = function(value){
+			return {
+				name: titleCase(value.name),
+				classification: titleCase(value.classification),
+				designation: titleCase(value.designation),
+				avg_height: parseNumberWithUnit(value.average_height, 'cm'),
+				skin_colors: titleCase(value.skin_colors),
+				hair_colors: titleCase(value.hair_colors),
+				eye_colors: titleCase(value.eye_colors),
+				lifespan: parseNumberWithUnit(value.average_lifespan, ' years'),
+				language: titleCase(value.language),
+				characterUrls: value.people,
+				filmUrls: value.films,
+				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
+				id: parseInt(getIdFromUrl(value.url)),
+				url: "#/species/id/" + getIdFromUrl(value.url)
+			};
+		};
+
+		var parseNumberWithUnit = function(value, unit){
+			if(isNaN(value)){
+				return {
+					unit: titleCase(value)
+				};
+			}
+
+			return {
+				number: value,
+				unit: unit
+			};
+		};
+
+		var getIdFromUrl = function(value){
+			var id = value.match(/([0-9])+/g);
+			id = id[0];
+			return id;
+		};
+
+
+		return {
+			getAll: function(page, callback)	{
+				$http.get('http://swapi.co/api/species/?page=' + page, {cache:true})
+					.then(function(response) {
+						//console.log(response);
+						var speciesResponse = response.data.results;
+						var newSpecies = [];
+						var totalSpecies;
+
+						newSpecies = speciesResponse.map(function(value){
+							return formatSpeciesBasicDetails(value);
+						});
+
+						totalSpecies = response.data.count;
+						totalSpeciesPages = Math.ceil(totalSpecies / 10);
+
+						species = newSpecies;
+
+						callback(null, species);
+					}, function(err) {
+						callback(err);
+				});
+			},
+
+			getById: function(id, callback){
+				$http.get('http://swapi.co/api/species/' + id +'/', {cache:true})
+					.then(function(response){
+						var specie = formatSpeciesDetails(response.data);
+
+						callback(null, specie);
+					}, function(err){
+						callback(err);
+				});
+			}, 
+
+			getByUrls: function(urls, cb){
+				if(!(urls && urls.length)){
+					return cb && cb(null, []);
+				}
+				
+				var urlCalls = urls.map(function(url) {
+					return $http.get(url, {cache:true});
+				});
+
+				$q.all(urlCalls, cb)
+					.then(function(results) {
+						var species = results.map(function(item){
+							return formatSpeciesBasicDetails(item.data);
+						});
+						cb(null, species);
+					},
+					function(err) {
+						cb(err);
+					}
+				);
+			}, 
+
+			getNumberOfPages: function(){
+				return totalSpeciesPages;
+			}
+		};
+	}]);
+angular.module('StarWarsApp')
 	.controller('starshipController', ['$scope', '$http', 'starshipsFactory', '$routeParams', function($scope, $http, starshipsFactory, $routeParams){
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/starships', name: 'Starships' }
+            { url: '#/starships/page=1', name: 'Starships' }
         ];
 
 		starshipsFactory.getById(id, function(err, starship) {
@@ -756,166 +926,11 @@ angular.module('StarWarsApp')
 		};
 	}]);
 angular.module('StarWarsApp')
-	.controller('specieController', ['$scope', '$http', 'speciesFactory', '$routeParams', function($scope, $http, speciesFactory, $routeParams){
-        var id = $routeParams.id;
-        $scope.crumbs = [
-            { url: '#/', name: 'Home' },
-            { url: '#/species', name: 'Species' },
-        ];
-
-		speciesFactory.getById(id, function(err, specie) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.specie = specie;
-
-            $scope.pageTitle = $scope.specie.name;
-        });    
-	}]);
-angular.module('StarWarsApp')
-	.controller('speciesController', ['$scope', '$http', 'speciesFactory', '_', '$routeParams', '$location', function($scope, $http, speciesFactory, _, $routeParams, $location){
-
-        $scope.crumbs = [
-            { url: '#/', name: 'Home' },
-        ];
-        $scope.pageTitle = 'Species';
-        $scope.currentPage = $routeParams.page;
-
-		speciesFactory.getAll($scope.currentPage, function(err, species) {
-            if(err) {
-                return console.log(err);
-            }
-            $scope.species = species;
-            var numberOfPages = speciesFactory.getNumberOfPages();
-            $scope.pages = _.range(1, numberOfPages+1);
-        });
-
-        $scope.getNewPage = function(newPageNumber){
-            $location.path('/species/page=' + newPageNumber);
-        };
-         
-	}]);
-angular.module('StarWarsApp')
-	.factory('speciesFactory', ['$http', '$q', 'titleCase', function($http, $q, titleCase){
-
-		var species = [];
-		var totalSpeciesPages;
-
-		var formatSpeciesBasicDetails = function(value){
-			return {
-				name: titleCase(value.name),
-				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
-				url: "#/species/id/" + getIdFromUrl(value.url)
-			};
-		};
-
-		var formatSpeciesDetails = function(value){
-			return {
-				name: titleCase(value.name),
-				classification: titleCase(value.classification),
-				designation: titleCase(value.designation),
-				avg_height: parseNumberWithUnit(value.average_height, 'cm'),
-				skin_colors: titleCase(value.skin_colors),
-				hair_colors: titleCase(value.hair_colors),
-				eye_colors: titleCase(value.eye_colors),
-				lifespan: parseNumberWithUnit(value.average_lifespan, ' years'),
-				language: titleCase(value.language),
-				characterUrls: value.people,
-				filmUrls: value.films,
-				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
-				id: parseInt(getIdFromUrl(value.url)),
-				url: "#/species/id/" + getIdFromUrl(value.url)
-			};
-		};
-
-		var parseNumberWithUnit = function(value, unit){
-			if(isNaN(value)){
-				return {
-					unit: titleCase(value)
-				};
-			}
-
-			return {
-				number: value,
-				unit: unit
-			};
-		};
-
-		var getIdFromUrl = function(value){
-			var id = value.match(/([0-9])+/g);
-			id = id[0];
-			return id;
-		};
-
-
-		return {
-			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/species/?page=' + page, {cache:true})
-					.then(function(response) {
-						//console.log(response);
-						var speciesResponse = response.data.results;
-						var newSpecies = [];
-						var totalSpecies;
-
-						newSpecies = speciesResponse.map(function(value){
-							return formatSpeciesBasicDetails(value);
-						});
-
-						totalSpecies = response.data.count;
-						totalSpeciesPages = Math.ceil(totalSpecies / 10);
-
-						species = newSpecies;
-
-						callback(null, species);
-					}, function(err) {
-						callback(err);
-				});
-			},
-
-			getById: function(id, callback){
-				$http.get('http://swapi.co/api/species/' + id +'/', {cache:true})
-					.then(function(response){
-						var specie = formatSpeciesDetails(response.data);
-
-						callback(null, specie);
-					}, function(err){
-						callback(err);
-				});
-			}, 
-
-			getByUrls: function(urls, cb){
-				if(!(urls && urls.length)){
-					return cb && cb(null, []);
-				}
-				
-				var urlCalls = urls.map(function(url) {
-					return $http.get(url, {cache:true});
-				});
-
-				$q.all(urlCalls, cb)
-					.then(function(results) {
-						var species = results.map(function(item){
-							return formatSpeciesBasicDetails(item.data);
-						});
-						cb(null, species);
-					},
-					function(err) {
-						cb(err);
-					}
-				);
-			}, 
-
-			getNumberOfPages: function(){
-				return totalSpeciesPages;
-			}
-		};
-	}]);
-angular.module('StarWarsApp')
 	.controller('vehicleController', ['$scope', '$http', 'vehiclesFactory', '$routeParams', function($scope, $http, vehiclesFactory, $routeParams){
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/vehicles', name: 'Vehicles' }
+            { url: '#/vehicles/page=1', name: 'Vehicles' }
         ];
 
 		vehiclesFactory.getById(id, function(err, vehicle) {

@@ -27,14 +27,15 @@ html {
 }
 
 header {
-	height: 300px;
+	height: 200px;
 }
 
 .view-container {
-	min-height: calc(100vh - 500px);
+	min-height: calc(100vh - 400px);
 }
 
 footer {
+	font-size: .75em;
 	color: $white;
 	width: 70%;
 	margin: 0 auto;
@@ -80,12 +81,13 @@ footer a{
 
 .title {
 	font-family: "jedi-outline";
-	font-size: 6em;
+	font-size: 4em;
 }
 
 .subtitle {
 	font-family: 'jedi-subtitle';
 	letter-spacing: .75em;
+	font-size: .75em;
 	color: $white;
 	margin-top: -1em;
 	margin-bottom: -2em;
@@ -110,7 +112,7 @@ footer a{
 }
 
 .category-title {
-	font-size: 1.25em;	
+	font-size: 1em;	
 }
 
 .content {
@@ -136,14 +138,10 @@ footer a{
 
 .details-badge {
 	margin-bottom: 2em;
-}
-
-.height-300 {
-	height: 300px;
-}
-
-.height-400 {
-	height: 400px;
+	height: 20em;
+	.details-image {
+		height: 20em;
+	}
 }
 
 .jedi-font {
