@@ -31,7 +31,7 @@ header {
 }
 
 .view-container {
-	min-height: calc(100vh - 400px);
+	min-height: calc(100vh - 300px);
 }
 
 footer {
@@ -40,7 +40,7 @@ footer {
 	width: 70%;
 	margin: 0 auto;
 	clear: both;
-	height: 200px;
+	height: 100px;
 	display: table;
 	.footer-content {
 		display: table-cell;
