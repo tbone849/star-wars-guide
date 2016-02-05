@@ -3,7 +3,7 @@ angular.module('StarWarsApp')
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/starships/page=1', name: 'Starships' }
+            { url: '#/starships?page=1', name: 'Starships' }
         ];
 
 		starshipsFactory.getById(id, function(err, starship) {

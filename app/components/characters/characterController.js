@@ -4,7 +4,7 @@ angular.module('StarWarsApp')
         var id = $routeParams.id;
         $scope.crumbs = [
             { url: '#/', name: 'Home' },
-            { url: '#/characters/page=1', name: 'Characters' }
+            { url: '#/characters?page=1', name: 'Characters' }
         ];
 
 		characterFactory.getById(id, function(err, person) {

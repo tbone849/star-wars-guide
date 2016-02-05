@@ -8,7 +8,7 @@ angular.module('StarWarsApp')
 			return {
 				name: value.name,
 				img_url: './assets/img/vehicles/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
-				url: "#/vehicles/id/" + getIdFromUrl(value.url)
+				url: "#/vehicles/" + getIdFromUrl(value.url)
 			};
 		};
 
@@ -32,7 +32,7 @@ angular.module('StarWarsApp')
 				filmUrls: value.films,
 				img_url: './assets/img/vehicles/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
-				url: "#/vehicles/id/" + getIdFromUrl(value.url)
+				url: "#/vehicles/" + getIdFromUrl(value.url)
 			};
 		};
 

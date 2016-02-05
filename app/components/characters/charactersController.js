@@ -17,7 +17,7 @@ angular.module('StarWarsApp')
         });
 
         $scope.getNewPage = function(newPageNumber){
-            $location.path('/characters/page=' + newPageNumber);
+            $location.search('page', newPageNumber);
         };
          
 	}]);

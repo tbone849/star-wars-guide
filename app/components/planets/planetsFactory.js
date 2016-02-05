@@ -8,7 +8,7 @@ angular.module('StarWarsApp')
 			return {
 				name: titleCase(value.name),
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
-				url: "#/planets/id/" + getIdFromUrl(value.url)
+				url: "#/planets/" + getIdFromUrl(value.url)
 			};
 		};
 
@@ -27,7 +27,7 @@ angular.module('StarWarsApp')
 				filmUrls: value.films,
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
-				url: "#/planets/id/" + getIdFromUrl(value.url)
+				url: "#/planets/" + getIdFromUrl(value.url)
 			};
 		};
 
