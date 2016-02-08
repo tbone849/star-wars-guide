@@ -18,6 +18,7 @@ angular.module('StarWarsApp')
                     console.log(err);
                 }
                 $scope.person.homeworld = homeworld[0];
+                console.log(homeworld);
             });
 
             speciesFactory.getByUrls(person.speciesUrls, function(err, species){

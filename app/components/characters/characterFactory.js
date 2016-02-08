@@ -20,11 +20,11 @@ angular.module('StarWarsApp')
 				gender: titleCase(value.gender),
 				height: parseNumberWithUnit(value.height, 'cm'),
 				mass: parseNumberWithUnit(value.mass, 'kg'),
-				homeworld_url: [value.homeworld],
-				filmUrls: value.films,
-				speciesUrls: value.species,
-				vehicleUrls: value.vehicles,
-				starshipUrls: value.starships,
+				homeworld_url: parseUrls(value.homeworld),
+				filmUrls: parseUrls(value.films),
+				speciesUrls: parseUrls(value.species),
+				vehicleUrls: parseUrls(value.vehicles),
+				starshipUrls: parseUrls(value.starships),
 				id: parseInt(getIdFromUrl(value.url)),
 				img_url: "./assets/img/characters/" + parseInt(getIdFromUrl(value.url)) + ".jpg",
 				url: '#/characters/' + getIdFromUrl(value.url)
@@ -58,9 +58,24 @@ angular.module('StarWarsApp')
 			return id;
 		};
 
+		var parseUrls = function(value){
+			var urls = [];
+			var strippedUrls = [];
+			if(value instanceof Array ){
+				urls = value;
+			} else {
+				urls = [value];
+			}
+			strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:/g, "");
+			});
+			console.log(strippedUrls);
+			return strippedUrls;
+		};
+
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/people/?page=' + page, {cache:true})
+				$http.get('//swapi.co/api/people/?page=' + page, {cache:true})
 					.then(function(response) {
 						var peopleResponse = response.data.results;
 						var newPeople = [];
@@ -82,7 +97,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/people/' + id +'/', {cache:true})
+				$http.get('//swapi.co/api/people/' + id +'/', {cache:true})
 					.then(function(response){
 						var person = formatPersonDetails(response.data);
 						

@@ -23,12 +23,27 @@ angular.module('StarWarsApp')
 				eye_colors: titleCase(value.eye_colors),
 				lifespan: parseNumberWithUnit(value.average_lifespan, ' years'),
 				language: titleCase(value.language),
-				characterUrls: value.people,
-				filmUrls: value.films,
+				characterUrls: parseUrls(value.people),
+				filmUrls: parseUrls(value.films),
 				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/species/" + getIdFromUrl(value.url)
 			};
+		};
+
+		var parseUrls = function(value){
+			var urls = [];
+			var strippedUrls = [];
+			if(value instanceof Array ){
+				urls = value;
+			} else {
+				urls = [value];
+			}
+			strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:/g, "");
+			});
+			console.log(strippedUrls);
+			return strippedUrls;
 		};
 
 		var parseNumberWithUnit = function(value, unit){
@@ -53,7 +68,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/species/?page=' + page, {cache:true})
+				$http.get('//swapi.co/api/species/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var speciesResponse = response.data.results;
@@ -76,7 +91,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/species/' + id +'/', {cache:true})
+				$http.get('//swapi.co/api/species/' + id +'/', {cache:true})
 					.then(function(response){
 						var specie = formatSpeciesDetails(response.data);
 

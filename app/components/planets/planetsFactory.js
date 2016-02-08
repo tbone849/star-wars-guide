@@ -23,12 +23,27 @@ angular.module('StarWarsApp')
 				terrain: titleCase(value.terrain),
 				water: parseNumberWithUnit(value.surface_water, '%'),
 				population: parseNumber(value.population),
-				characterUrls: value.residents,
-				filmUrls: value.films,
+				characterUrls: parseUrls(value.residents),
+				filmUrls: parseUrls(value.films),
 				img_url: './assets/img/planets/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/planets/" + getIdFromUrl(value.url)
 			};
+		};
+
+		var parseUrls = function(value){
+			var urls = [];
+			var strippedUrls = [];
+			if(value instanceof Array ){
+				urls = value;
+			} else {
+				urls = [value];
+			}
+			strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:/g, "");
+			});
+			console.log(strippedUrls);
+			return strippedUrls;
 		};
 
 		var parseNumberWithUnit = function(value, unit){
@@ -61,7 +76,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/planets/?page=' + page, {cache:true})
+				$http.get('//swapi.co/api/planets/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var planetsResponse = response.data.results;
@@ -84,7 +99,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/planets/' + id +'/', {cache:true})
+				$http.get('//swapi.co/api/planets/' + id +'/', {cache:true})
 					.then(function(response){
 						var planets = formatPlanetsDetails(response.data);
 

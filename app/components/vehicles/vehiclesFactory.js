@@ -95,10 +95,23 @@ angular.module('StarWarsApp')
 			return id;
 		};
 
+		var parseUrls = function(value){
+			var urls = [];
+			if(value && !value.length){
+				urls = [value];
+			} else if(value && value.length){
+				urls = value;
+			}
+			var strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:\/\//g, "");
+			});
+			return strippedUrls;
+		};
+
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/vehicles/?page=' + page, {cache:true})
+				$http.get('//swapi.co/api/vehicles/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var vehiclesResponse = response.data.results;
@@ -121,7 +134,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/vehicles/' + id +'/', {cache:true})
+				$http.get('//swapi.co/api/vehicles/' + id +'/', {cache:true})
 					.then(function(response){
 						var vehicles = formatVehiclesDetails(response.data);
 

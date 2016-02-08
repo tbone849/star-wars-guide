@@ -30,12 +30,27 @@ angular.module('StarWarsApp')
 				hyperdrive_rating: value.hyperdrive_rating,
 				mglt: value.MGLT,
 				shipclass: titleCase(value.starship_class),
-				characterUrls: value.pilots,
-				filmUrls: value.films,
+				characterUrls: parseUrls(value.pilots),
+				filmUrls: parseUrls(value.films),
 				img_url: './assets/img/starships/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/starships/" + getIdFromUrl(value.url)
 			};
+		};
+
+		var parseUrls = function(value){
+			var urls = [];
+			var strippedUrls = [];
+			if(value instanceof Array ){
+				urls = value;
+			} else {
+				urls = [value];
+			}
+			strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:/g, "");
+			});
+			console.log(strippedUrls);
+			return strippedUrls;
 		};
 
 		var parseNumberWithUnit = function(value, unit){
@@ -100,7 +115,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback){
-				$http.get('http://swapi.co/api/starships/?page=' + page, {cache:true})
+				$http.get('//swapi.co/api/starships/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var starshipsResponse = response.data.results;
@@ -123,7 +138,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/starships/' + id +'/', {cache:true})
+				$http.get('//swapi.co/api/starships/' + id +'/', {cache:true})
 					.then(function(response){
 						var starships = formatStarshipsDetails(response.data);
 

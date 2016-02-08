@@ -21,14 +21,29 @@ angular.module('StarWarsApp')
 				crawl: value.opening_crawl,
 				producer: value.producer,
 				date: formatDate(value.release_date),
-				characterUrls: value.characters,
-				planetUrls: value.planets,
-				starshipUrls: value.starships,
-				vehicleUrls: value.vehicles,
-				speciesUrls: value.species,
+				characterUrls: parseUrls(value.characters),
+				planetUrls: parseUrls(value.planets),
+				starshipUrls: parseUrls(value.starships),
+				vehicleUrls: parseUrls(value.vehicles),
+				speciesUrls: parseUrls(value.species),
 				img_url: "./assets/img/films/" + getIdFromUrl(value.url) + ".jpg",
 				url: "#/films/" + getIdFromUrl(value.url)
 			};
+		};
+
+		var parseUrls = function(value){
+			var urls = [];
+			var strippedUrls = [];
+			if(value instanceof Array ){
+				urls = value;
+			} else {
+				urls = [value];
+			}
+			strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:/g, "");
+			});
+			console.log(strippedUrls);
+			return strippedUrls;
 		};
 
 		var formatDate = function(date){
@@ -82,7 +97,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('http://swapi.co/api/films/?page=' + page, {cache:true})
+				$http.get('//swapi.co/api/films/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var filmResponse = response.data.results;
@@ -105,7 +120,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('http://swapi.co/api/films/' + id +'/', {cache:true})
+				$http.get('//swapi.co/api/films/' + id +'/', {cache:true})
 					.then(function(response){
 						var film = formatFilmDetails(response.data);
 
