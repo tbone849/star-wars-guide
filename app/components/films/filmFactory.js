@@ -42,7 +42,6 @@ angular.module('StarWarsApp')
 			strippedUrls = urls.map(function(url){
 				return url.replace(/.*?:/g, "");
 			});
-			console.log(strippedUrls);
 			return strippedUrls;
 		};
 
