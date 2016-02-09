@@ -1,5 +1,8 @@
 angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
-	.config(['$routeProvider', function($routeProvider){
+	.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider){
+        $httpProvider.defaults.useXDomain = true;
+        delete $httpProvider.defaults.headers.common["X-Requested-With"];
+
         $routeProvider.when('/', {
             templateUrl : 'components/categories.html'
         }).when('/characters', {

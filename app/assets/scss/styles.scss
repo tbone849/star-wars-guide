@@ -26,6 +26,10 @@ html {
 	font-family: "biko";
 }
 
+header, .view-container, .content, footer {
+	z-index: 10;
+}
+
 header {
 	height: 200px;
 }

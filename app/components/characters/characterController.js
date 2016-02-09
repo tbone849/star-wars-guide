@@ -1,5 +1,5 @@
 angular.module('StarWarsApp')
-	.controller('characterController', ['$scope', '$http', 'characterFactory', 'planetsFactory', 'speciesFactory', '$routeParams', function($scope, $http, characterFactory, planetsFactory, speciesFactory, $routeParams){
+	.controller('characterController', ['$scope', '$http', 'characterFactory', 'planetsFactory', 'speciesFactory', 'wikiaFactory', '$routeParams', function($scope, $http, characterFactory, planetsFactory, speciesFactory, wikiaFactory, $routeParams){
         
         var id = $routeParams.id;
         $scope.crumbs = [
@@ -27,6 +27,12 @@ angular.module('StarWarsApp')
                 }
                 $scope.person.species = species[0];
             });
+
+            // waiting on api key
+            //wikiaFactory.getAbstract(person.name, function(err, response){
+                //console.log(err);
+                //console.log(response);
+            //});
             
             
             $scope.pageTitle = $scope.person.name;
