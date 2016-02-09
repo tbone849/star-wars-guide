@@ -100,15 +100,8 @@ footer a{
 .category {
 	margin-top: 2em;
 	margin-bottom: 2em;
-	@include span-columns(2);
-	@include media-query(palm) {
-		@include span-columns(12);
-	}
-	@include media-query(portable) {
-    	@include span-columns(4);
-    	@include omega(3n);
-	}
-	
+	@include span-columns(4);
+	@include omega(3n);	
 }
 
 .category-image {
@@ -116,7 +109,11 @@ footer a{
 }
 
 .category-title {
-	font-size: 1em;	
+	font-size: 1.2em;
+	margin-left: -16px;
+	margin-right: -16px;
+	padding-left: 1em;
+	background-color: rgba(0, 0, 0, 0.4);	
 }
 
 .content {
@@ -142,9 +139,9 @@ footer a{
 
 .details-badge {
 	margin-bottom: 2em;
-	height: 20em;
+	
 	.details-image {
-		height: 20em;
+		height: 25em;
 	}
 }
 
