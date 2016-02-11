@@ -1,4 +1,4 @@
-angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore', 'ngCookies'])
+angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore'])
 	.config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvider){
         $httpProvider.defaults.useXDomain = true;
         delete $httpProvider.defaults.headers.common["X-Requested-With"];
