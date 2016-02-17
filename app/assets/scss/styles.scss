@@ -180,7 +180,7 @@ footer a{
 	display: inline-block;
 }
 
-.card-link {
+a {
 	&:link, &:visited, &:hover, &:active {
 		color: $light-blue-600;
 		text-decoration: none;
@@ -201,7 +201,11 @@ footer a{
 	}
 }
 
-
+.help {
+	position: absolute;
+	left: 15%;
+	top: 2em;
+}
 
 
 
