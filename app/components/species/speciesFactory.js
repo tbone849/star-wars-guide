@@ -6,7 +6,7 @@ angular.module('StarWarsApp')
 
 		var formatSpeciesBasicDetails = function(value){
 			return {
-				name: parseName(value.name),
+				name: titleCase(value.name),
 				img_url: './assets/img/species/' + parseInt(getIdFromUrl(value.url)) + '.jpg',
 				url: "#/species/" + getIdFromUrl(value.url)
 			};
@@ -14,7 +14,7 @@ angular.module('StarWarsApp')
 
 		var formatSpeciesDetails = function(value){
 			return {
-				name: parseName(value.name),
+				name: titleCase(value.name),
 				classification: titleCase(value.classification),
 				designation: titleCase(value.designation),
 				avg_height: parseNumberWithUnit(value.average_height, 'cm'),
@@ -29,14 +29,6 @@ angular.module('StarWarsApp')
 				id: parseInt(getIdFromUrl(value.url)),
 				url: "#/species/" + getIdFromUrl(value.url)
 			};
-		};
-
-		var parseName = function(value){
-			if(value){
-				return titleCase(value);
-			}
-
-			return 'Unknown';
 		};
 
 		var parseUrls = function(value){
@@ -109,7 +101,7 @@ angular.module('StarWarsApp')
 			}, 
 
 			getByUrls: function(urls, cb){
-				if(!(urls && urls.length)){
+				if(!urls.length){
 					var fallback = [
 						{name: 'Unknown', url: ''}
 					];

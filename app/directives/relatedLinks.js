@@ -35,15 +35,18 @@ angular.module('StarWarsApp')
 				scope.$watch('urls', function(newUrls){
 					factory.getByUrls(newUrls, function(err, data){
 						if(err){
+							scope.loaded = true;
 							scope.hasError = true;
 							scope.err = 'An error occured. Please try again later.';
 							return console.log(err);
-						}
-						if(data && data.length){
+						} else if(data && data.length){
+							scope.loaded = true;
 							scope.hasData = true;
 							items = data;
 							scope.totalPages = Math.ceil(items.length / 5);
 							scope.chunk = items.slice(slicePosition, 5);
+						} else if(newUrls){
+							scope.loaded = true;
 						}
 
 					});

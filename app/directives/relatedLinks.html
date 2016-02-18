@@ -4,8 +4,15 @@
             <strong class="fs-subhead display-block">{{header}}</strong>
         </div>
         <div class="divider divider--dark"></div>
-        <div ng-show='hasError' class='fs-subhead p+'>{{err}}</div>
-        <div ng-hide='hasData' class='fs-subhead p+'>There are no related items for this category</div>
+        <div ng-show='hasError' class='fs-subhead p+'>{{err}}</div>      
+        <div class='loading' ng-hide="loaded">
+            <lx-progress 
+                lx-type="circular" 
+                lx-color="red">
+            </lx-progress>
+            <span>Loading...</span>
+        </div>
+        <div ng-hide='hasData || !loaded' class='fs-subhead p+'>There are no related items for this category</div>
         <ul class="list p">
             <li ng-repeat='item in chunk' class="list-row list-row--has-separator">
                 <div class="list-row__primary">

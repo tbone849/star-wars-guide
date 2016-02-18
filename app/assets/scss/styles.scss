@@ -262,6 +262,9 @@ a {
 	@include media-query(palm) {
 		@include span-columns(12);
 	}
+	.card {
+		height: 420px;
+	}
 }
 
 .list-paginate {
@@ -280,6 +283,12 @@ a {
     	display: none;
 	}
 }
+
+.loading > * {
+	display: table-cell;
+	vertical-align: middle;
+}
+
 
 
 
