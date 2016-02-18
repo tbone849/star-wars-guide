@@ -12,13 +12,13 @@ angular.module('StarWarsApp')
                 return console.log(err);
             }
             $scope.person = person;
+            //console.log($scope.person);
 
             planetsFactory.getByUrls(person.homeworld_url, function(err, homeworld){
                 if(err) {
                     console.log(err);
                 }
                 $scope.person.homeworld = homeworld[0];
-                console.log(homeworld);
             });
 
             speciesFactory.getByUrls(person.speciesUrls, function(err, species){

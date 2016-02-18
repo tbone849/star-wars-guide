@@ -181,10 +181,11 @@ footer a{
 }
 
 a {
-	&:link, &:visited, &:hover, &:active {
+	&:link, &:visited, &[href]:hover, &:active {
 		color: $light-blue-600;
 		text-decoration: none;
 	}
+
 }
 
 // test
