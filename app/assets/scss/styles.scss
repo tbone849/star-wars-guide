@@ -105,7 +105,7 @@ footer {
 }
 
 footer a{
-	&:link, &:visited, &:hover, &:active{
+	&:link, &:visited, &[href]:hover, &:active{
 		color: $light-blue-200;
 		text-decoration: none;
 	}
@@ -249,7 +249,7 @@ footer a{
 
 a {
 	&:link, &:visited, &[href]:hover, &:active {
-		color: $light-blue-200;
+		color: $light-blue-600;
 		text-decoration: none;
 	}
 
