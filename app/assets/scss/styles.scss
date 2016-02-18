@@ -264,6 +264,9 @@ a {
 	}
 	.card {
 		height: 420px;
+		@include media-query(palm){
+			height: auto;
+		}
 	}
 }
 
