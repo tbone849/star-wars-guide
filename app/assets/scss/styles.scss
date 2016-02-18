@@ -2,6 +2,30 @@
 @import 'neat';
 @import "../libs/lumx/dist/scss/lumx";
 
+// ------------------------------------------------------------
+// Override Neat's grid settings
+// ------------------------------------------------------------
+
+$column: golden-ratio(1em, 3) !default; // Column width
+$gutter: golden-ratio(1em, 3) !default; // Gutter between each two columns
+
+// ------------------------------------------------------------
+// Set Bourbon's flex-grid variables to match what Neat is doing
+// http://bourbon.io/docs/#flex-grid
+// ------------------------------------------------------------
+
+$fg-column: $column;
+$fg-gutter: $gutter;
+
+// ------------------------------------------------------------
+// Omega Reset
+// ------------------------------------------------------------
+
+@mixin omega-reset($nth) {
+  &:nth-child(#{$nth}) { margin-right: flex-gutter(); }
+  &:nth-child(#{$nth}+1) { clear: none }
+}
+
 @font-face {
     font-family: 'jedi';
     src: url('../fonts/Starjedi.ttf');
@@ -24,6 +48,9 @@
 
 html {
 	font-family: "biko";
+	@include media-query(palm) {
+    	font-size: 80%;
+	}
 }
 
 header, .view-container, .content, footer {
@@ -32,6 +59,9 @@ header, .view-container, .content, footer {
 
 header {
 	height: 200px;
+	@include media-query(palm) {
+    	height: 150px;
+	}
 }
 
 .view-container {
@@ -46,6 +76,12 @@ footer {
 	clear: both;
 	height: 100px;
 	display: table;
+	
+	@include media-query(palm) {
+    	padding-top: 2em;
+    	text-align: center;
+	}
+
 	.footer-content {
 		display: table-cell;
 		vertical-align: bottom;
@@ -101,7 +137,12 @@ footer a{
 	margin-top: 2em;
 	margin-bottom: 2em;
 	@include span-columns(4);
-	@include omega(3n);	
+	@include omega(3n);
+	@include media-query(palm) {
+    	@include span-columns(12);
+    	margin-top: 0;
+    	margin-bottom: 0;
+	}
 }
 
 .category-image {
@@ -119,6 +160,9 @@ footer a{
 .content {
 	width: 70%;
 	margin: auto;
+	@include media-query(palm) {
+    	width: 100%;
+	}
 }
 
 .response-container {
@@ -132,6 +176,12 @@ footer a{
 	@include span-columns(12/5);
 	@include omega(5n);
 
+	@include media-query(palm) {
+		@include omega-reset(5n);
+    	@include span-columns(6);
+    	@include omega(2n);
+	}
+
 	a {
 		text-decoration: none;
 	}
@@ -142,11 +192,29 @@ footer a{
 	
 	.details-image {
 		height: 25em;
+		@include media-query(palm) {
+			height: auto;
+			width: 100%;
+		}
 	}
 }
 
 .jedi-font {
 	font-family: 'jedi';
+}
+
+.nav-container {
+	@include media-query(palm) {
+		display: table;
+		width: 100%;
+		padding: 0 1em;
+		breadcrumbs {
+			display: table-header-group;
+		}
+		pagination {
+			display: table-footer-group;
+		}
+	}
 }
 
 .breadcrumbs {
@@ -158,7 +226,6 @@ footer a{
 		color: $light-blue-200;
 		text-decoration: none;
 	}
-
 }
 
 .breadcrumb--capitalize {
@@ -191,7 +258,10 @@ a {
 // test
 .related-card {
 	@include span-columns(12/5);
-	margin-bottom: 1em;	
+	margin-bottom: 1em;
+	@include media-query(palm) {
+		@include span-columns(12);
+	}
 }
 
 .list-paginate {
@@ -206,6 +276,9 @@ a {
 	position: absolute;
 	left: 15%;
 	top: 2em;
+	@include media-query(palm) {
+    	display: none;
+	}
 }
 
 

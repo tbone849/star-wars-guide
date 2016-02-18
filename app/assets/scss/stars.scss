@@ -3,7 +3,7 @@ Nick Mkrtchyan
 http://www.facebook.com/sonick.pk
 http://www.Mkrtchyan.zz.mu
 ================================================================================================= */
-
+@import "../libs/lumx/dist/scss/lumx";
 
 @keyframes move-twink-back {
     from {background-position:0 0;}
@@ -32,15 +32,24 @@ http://www.Mkrtchyan.zz.mu
   height:100%;
   display:block;
   z-index: -1;
+  @include media-query(palm) {
+    display: none;
+  }
 }
 
 .stars {
   background:#000 url(http://www.script-tutorials.com/demos/360/images/stars.png) repeat top center;
+  @include media-query(palm) {
+    background: none;
+  }
 
 }
 
 .twinkling{
   background:transparent url(http://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center;
+  @include media-query(palm) {
+    background: none;
+  }
   
 
   -moz-animation:move-twink-back 200s linear infinite;
