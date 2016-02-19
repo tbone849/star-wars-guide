@@ -5,7 +5,7 @@ angular.module('StarWarsApp')
             { url: '#/', name: 'Home' }
         ];
         $scope.pageTitle = 'Starships';
-        $scope.currentPage = $routeParams.page;
+        $scope.currentPage = parseInt($routeParams.page);
 
 		starshipsFactory.getAll($scope.currentPage, function(err, starships) {
             if(err) {

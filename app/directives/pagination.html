@@ -2,19 +2,21 @@
 	<button 
 		class="btn btn--s btn--white btn--raised chevron" 
 		lx-ripple
-		ng-click="getNewPage(currentPage*1 - 1)">
+		ng-hide='currentPage === 1'
+		ng-click="getNewPage(currentPage - 1)">
 		<i class="mdi mdi-chevron-left"></i>
 	</button>
 	<button 
 		class="btn btn--s btn--raised numbers" 
 		ng-class='isCurrentPage({{i}})? "bgc-light-blue-200" : "btn--white"' 
 		lx-ripple 
-		ng-repeat="i in pages" ng-click="getNewPage(i)">{{i}}
+		ng-repeat="i in pages | limitTo : 5 : start" ng-click="getNewPage(i)">{{i}}
 	</button>
 	<button 
 		class="btn btn--s btn--white btn--raised chevron" 
 		lx-ripple
-		ng-click="getNewPage(currentPage*1 + 1)">
+		ng-click="getNewPage(currentPage + 1)"
+		ng-hide='currentPage === pages.length'>
 		<i class="mdi mdi-chevron-right"></i>
 	</button>
 </div>

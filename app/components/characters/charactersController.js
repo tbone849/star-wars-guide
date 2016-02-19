@@ -5,7 +5,7 @@ angular.module('StarWarsApp')
             { url: '#/', name: 'Home' }
         ];
         $scope.pageTitle = 'Characters';
-        $scope.currentPage = $routeParams.page;
+        $scope.currentPage = parseInt($routeParams.page);
 
 		characterFactory.getAll($scope.currentPage, function(err, people) {
             if(err) {
