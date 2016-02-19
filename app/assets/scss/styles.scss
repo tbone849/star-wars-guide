@@ -222,7 +222,7 @@ footer a{
 	letter-spacing: .75em;
 	margin-bottom: 2em;
 	
-	a:link, a:visited, a:hover, a:active {
+	a:link, a:visited, a[href]:hover, a:active {
 		color: $light-blue-200;
 		text-decoration: none;
 	}
@@ -234,12 +234,19 @@ footer a{
 
 .pagination {
 	float: right;
-	text-align: right;
 	display: inline-block;
 
 	.numbers {
-		margin-left: 1.5em;
+		margin-right: 1.2em;
 		vertical-align: baseline;
+	}
+
+	.chevron {
+		font-size: 1.2em;
+
+		&:first-of-type {
+			margin-right: .7em;
+		}
 	}
 }
 

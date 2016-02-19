@@ -1,5 +1,5 @@
 angular.module('StarWarsApp')
-	.controller('filmsController', ['$scope', '$http', 'filmFactory', '_', '$routeParams', '$location', function($scope, $http, filmFactory, _, $routeParams, $location){
+	.controller('filmsController', ['$scope', '$http', 'filmFactory', '_', '$routeParams', function($scope, $http, filmFactory, _, $routeParams){
         
         $scope.crumbs = [
             { url: '#/', name: 'Home' }
@@ -14,10 +14,5 @@ angular.module('StarWarsApp')
             $scope.films = films;
             var numberOfPages = filmFactory.getNumberOfPages();
             $scope.pages = _.range(1, numberOfPages+1);
-        });
-
-        $scope.getNewPage = function(newPageNumber){
-            $location.search('page', newPageNumber);
-        };
-         
+        });         
 	}]);

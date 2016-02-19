@@ -1,17 +1,20 @@
 angular.module('StarWarsApp')
-	.directive('pagination', function(){
+	.directive('pagination', ['$location', function($location){
 		return {
 			restrict: 'E',
 			templateUrl: './directives/pagination.html',
 			scope: {
 				currentPage: "=",
-				pages: "=",
-				action: "&clickAction"
+				pages: "="
 			},
 			link: function(scope, element, attr){
 				scope.isCurrentPage = function(number){
 					return (number === parseInt(scope.currentPage));
-				};				
+				};
+
+				scope.getNewPage = function(newPageNumber){
+					$location.search('page', newPageNumber);
+				};		
 			}
 		};
-	});
+	}]);
