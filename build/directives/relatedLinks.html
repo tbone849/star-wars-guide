@@ -13,17 +13,16 @@
             <span>Loading...</span>
         </div>
         <div ng-hide='hasData || !loaded' class='fs-subhead p+'>There are no related items for this category</div>
-        <ul class="list p">
-            <li ng-repeat='item in chunk' class="list-row list-row--has-separator">
-                <div class="list-row__primary">
+        <div class="list p">
+            <div ng-repeat='item in chunk' class='list-item'>
+                <div class="link-icon">
                     <img ng-src="{{item.img_url}}" width="40" height="40" class="img-round" onerror="this.src='./assets/img/placeholder-small.jpg'">
                 </div>
-
-                <div class="list-row__content fs-body-1">
+                <div class="link-name">
                     <a class='card-link' ng-href='{{item.url}}'>{{item.name}}</a>
                 </div>
-            </li>
-        </ul>
+            </div>
+        </div>
         <div class="divider divider--dark" ng-hide='totalPages === 1 || !hasData'></div>
         <div class='list-paginate'>
             <button 

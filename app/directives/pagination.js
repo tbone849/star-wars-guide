@@ -10,7 +10,6 @@ angular.module('StarWarsApp')
 			link: function(scope, element, attr){
 
 				scope.$watch('pages', function(newValue){
-					console.log('new ' + newValue);
 					if(newValue){
 						if(scope.currentPage < 4 || scope.pages.length < 6){
 							scope.start = 0;

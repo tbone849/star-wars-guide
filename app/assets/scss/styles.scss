@@ -160,7 +160,7 @@ footer a{
 .content {
 	width: 70%;
 	margin: auto;
-	@include media-query(palm) {
+	@media (max-width: 600px) {
     	width: 100%;
 	}
 }
@@ -189,13 +189,35 @@ footer a{
 
 .details-badge {
 	margin-bottom: 2em;
-	
+
 	.details-image {
-		height: 25em;
-		@include media-query(palm) {
-			height: auto;
-			width: 100%;
+		@media (max-width: 600px) {
+			@include span-columns(12);
 		}
+		@media (min-width: 601px) and (max-width: 1449px) {
+			@include span-columns(4);
+		}
+		@media (min-width: 1450px) {
+			@include span-columns(3);
+		}
+	}
+
+	.details-text {
+		@media (max-width: 600px) {
+			@include span-columns(12);
+		}
+		@media (min-width: 601px) and (max-width: 1449px) {
+			@include span-columns(8);
+			@include omega();
+		}
+		@media (min-width: 1450px) {
+			@include span-columns(9);
+			@include omega();
+		}
+	}
+
+	img {
+		width: 100%;
 	}
 }
 
@@ -262,19 +284,44 @@ a {
 
 }
 
-// test
-.related-card {
-	@include span-columns(12/5);
+related-links {
+	display: block;
 	margin-bottom: 1em;
-	@include media-query(palm) {
-		@include span-columns(12);
-	}
-	.card {
-		height: 420px;
-		@include media-query(palm){
-			height: auto;
+	@media (min-width: 1300px) {
+		@include span-columns(4);
+		@include omega(3n);
+		.card {
+			min-height: 236px;
 		}
 	}
+	@media (min-width: 1000px) and (max-width: 1300px) {
+		@include span-columns(6);
+		@include omega(2n);
+		.card {
+			min-height: 236px;
+		}
+	}
+}
+
+.list {
+	overflow: auto;
+	padding: .5em 0;
+}
+
+.list-item {
+	@include span-columns(12/5);
+	max-width: 80px;
+}
+
+.link-name {
+	text-align: center;
+	font-size: .75em;
+}
+
+.link-icon img {
+	width: 40;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .list-paginate {
