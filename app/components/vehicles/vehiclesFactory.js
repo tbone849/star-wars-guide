@@ -97,13 +97,14 @@ angular.module('StarWarsApp')
 
 		var parseUrls = function(value){
 			var urls = [];
-			if(value && !value.length){
-				urls = [value];
-			} else if(value && value.length){
+			var strippedUrls = [];
+			if(value instanceof Array ){
 				urls = value;
+			} else {
+				urls = [value];
 			}
-			var strippedUrls = urls.map(function(url){
-				return url.replace(/.*?:\/\//g, "");
+			strippedUrls = urls.map(function(url){
+				return url.replace(/.*?:/g, "");
 			});
 			return strippedUrls;
 		};

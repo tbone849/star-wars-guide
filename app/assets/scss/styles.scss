@@ -221,6 +221,21 @@ footer a{
 	}
 }
 
+.wide {
+	.details-image {
+		@media (min-width: 601px) {
+			@include span-columns(4);
+		}
+	}
+
+	.details-text {
+		@media (min-width: 601px) {
+			@include span-columns(8);
+			@include omega();
+		}
+	}
+}
+
 .jedi-font {
 	font-family: 'jedi';
 }
