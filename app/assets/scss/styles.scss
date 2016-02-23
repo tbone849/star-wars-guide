@@ -242,6 +242,9 @@ footer a{
 		@media (min-width: 1200px) {
 			@include span-columns(5);
 		}
+		@media (min-width: 1600px) {
+			@include span-columns(4);
+		}
 	}
 	.details-text {
 		@include span-columns(6);
@@ -251,6 +254,10 @@ footer a{
 		}
 		@media (min-width: 1200px) {
 			@include span-columns(7);
+			@include omega();
+		}
+		@media (min-width: 1600px) {
+			@include span-columns(8)
 			@include omega();
 		}
 	}
