@@ -1,6 +1,6 @@
 <div class="card details-badge">
-	<div class="details details-image">
-		<img ng-src="{{imgUrl}}" onerror="this.src='/assets/img/placeholder.jpg'">
+	<div class="details details-image" ng-if='imgUrl'
+		 ng-style="{'background-image': 'url({{imgUrl}}), url(./assets/img/placeholder.jpg)'}">
 	</div>
 	<div class='details details-text'>
 		<div class="p+">

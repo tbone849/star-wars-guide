@@ -71,7 +71,7 @@ header {
 footer {
 	font-size: .75em;
 	color: $white;
-	width: 70%;
+	width: 80%;
 	margin: 0 auto;
 	clear: both;
 	height: 100px;
@@ -79,7 +79,6 @@ footer {
 	
 	@include media-query(palm) {
     	padding-top: 2em;
-    	text-align: center;
 	}
 
 	.footer-content {
@@ -89,9 +88,16 @@ footer {
 	.copyright {
 		float: right;
 		letter-spacing: .25em;
+		@media (max-width: 900px) {
+			float: none;
+			text-align: center;
+		}
 	}
 	.find-me {
 		padding-bottom: 2em;
+		@media (max-width: 900px) {
+			text-align: center;
+		}
 	}
 	.follow {
 		letter-spacing: .25em;
@@ -158,7 +164,7 @@ footer a{
 }
 
 .content {
-	width: 70%;
+	width: 80%;
 	margin: auto;
 	@media (max-width: 600px) {
     	width: 100%;
@@ -189,49 +195,49 @@ footer a{
 
 .details-badge {
 	margin-bottom: 2em;
+	height: 20em;
+	@media (max-width: 850px) {
+		height: auto;
+	}
 
 	.details-image {
-		@media (max-width: 600px) {
-			@include span-columns(12);
+		background-position: center top;
+		background-size: cover;
+		height: 100%;
+		@include span-columns(4);
+		@media (max-width: 850px) {
+			height: 20em;
 		}
-		@media (min-width: 601px) and (max-width: 1449px) {
-			@include span-columns(4);
-		}
-		@media (min-width: 1450px) {
-			@include span-columns(3);
-		}
+		
+		
 	}
 
 	.details-text {
-		@media (max-width: 600px) {
-			@include span-columns(12);
-		}
-		@media (min-width: 601px) and (max-width: 1449px) {
-			@include span-columns(8);
-			@include omega();
-		}
-		@media (min-width: 1450px) {
-			@include span-columns(9);
-			@include omega();
-		}
+		height: 100%;
+		@include span-columns(8);
+		@include omega();
 	}
 
-	img {
-		width: 100%;
-	}
 }
 
 .wide {
+
 	.details-image {
-		@media (min-width: 601px) {
-			@include span-columns(4);
+		background-position: center top;
+		@include span-columns(6);
+		@media (max-width: 850px) {
+			@include span-columns(12);
+			height: 400px;
+		}
+		@media (max-width: 500px) {
+			height: 250px;
 		}
 	}
-
 	.details-text {
-		@media (min-width: 601px) {
-			@include span-columns(8);
-			@include omega();
+		@include span-columns(6);
+		@include omega();
+		@media (max-width: 850px) {
+			@include span-columns(12);
 		}
 	}
 }
@@ -258,6 +264,9 @@ footer a{
 	color: $white;
 	letter-spacing: .75em;
 	margin-bottom: 2em;
+	@media (max-width: 600px) {
+		margin-left: 1em;
+	}
 	
 	a:link, a:visited, a[href]:hover, a:active {
 		color: $light-blue-200;
@@ -306,14 +315,14 @@ related-links {
 		@include span-columns(4);
 		@include omega(3n);
 		.card {
-			min-height: 236px;
+			min-height: 244px;
 		}
 	}
 	@media (min-width: 1000px) and (max-width: 1300px) {
 		@include span-columns(6);
 		@include omega(2n);
 		.card {
-			min-height: 236px;
+			min-height: 244px;
 		}
 	}
 }
@@ -321,6 +330,7 @@ related-links {
 .list {
 	overflow: auto;
 	padding: .5em 0;
+	min-height: 118px;
 }
 
 .list-item {
