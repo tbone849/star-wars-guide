@@ -230,7 +230,7 @@ footer a{
 .wide {
 
 	.details-image {
-		background-position: center top;
+		background-position: center 30%;
 		@include span-columns(6);
 		@media (max-width: 850px) {
 			@include span-columns(12);
@@ -239,12 +239,19 @@ footer a{
 		@media (max-width: 500px) {
 			height: 250px;
 		}
+		@media (min-width: 1200px) {
+			@include span-columns(5);
+		}
 	}
 	.details-text {
 		@include span-columns(6);
 		@include omega();
 		@media (max-width: 850px) {
 			@include span-columns(12);
+		}
+		@media (min-width: 1200px) {
+			@include span-columns(7);
+			@include omega();
 		}
 	}
 }
