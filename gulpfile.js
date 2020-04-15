@@ -11,8 +11,8 @@ var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var minifyCss = require('gulp-minify-css');
 
- 
-// run localhost:8080 server for build 
+
+// run localhost:8080 server for build
 gulp.task('connect', function () {
   connect.server({
     root: 'build',
@@ -51,7 +51,7 @@ gulp.task('scripts', function() {
 gulp.task('styles', function() {
   return gulp.src('./app/assets/scss/*.scss')
     .pipe(sass({
-      includePaths: require('node-neat').with('./app/assets/libs/mdi/scss')
+      includePaths: [require('node-neat').with('./app/assets/libs/mdi/scss'),require('bourbon').with('./app/assets/libs/bourbon/index.js')]
     }))
     .pipe(minifyCss({compatibility: 'ie8'}))
     .pipe(concat('styles.css'))

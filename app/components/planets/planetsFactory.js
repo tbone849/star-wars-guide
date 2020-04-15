@@ -75,7 +75,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('//swapi.co/api/planets/?page=' + page, {cache:true})
+				$http.get('//swapi.dev/api/planets/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var planetsResponse = response.data.results;
@@ -98,7 +98,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('//swapi.co/api/planets/' + id +'/', {cache:true})
+				$http.get('//swapi.dev/api/planets/' + id +'/', {cache:true})
 					.then(function(response){
 						var planets = formatPlanetsDetails(response.data);
 
@@ -106,13 +106,13 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
-			}, 
+			},
 
 			getByUrls: function(urls, cb){
 				if(!(urls && urls.length)){
 					return cb && cb(null, []);
 				}
-				
+
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});
@@ -128,7 +128,7 @@ angular.module('StarWarsApp')
 						cb(err);
 					}
 				);
-			}, 
+			},
 
 			getNumberOfPages: function(){
 				return totalPlanetsPages;

@@ -5,7 +5,8 @@ angular.module('StarWarsApp', ['lumx', 'ngRoute', 'underscore'])
 
         $routeProvider.when('/', {
             templateUrl : 'components/categories.html'
-        }).when('/characters', {
+        })
+        .when('/characters', {
 			templateUrl : 'components/characters/characters.html',
 			controller : 'charactersController'
         }).when('/characters/:id', {

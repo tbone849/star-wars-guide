@@ -67,7 +67,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('//swapi.co/api/species/?page=' + page, {cache:true})
+				$http.get('//swapi.dev/api/species/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var speciesResponse = response.data.results;
@@ -90,7 +90,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('//swapi.co/api/species/' + id +'/', {cache:true})
+				$http.get('//swapi.dev/api/species/' + id +'/', {cache:true})
 					.then(function(response){
 						var specie = formatSpeciesDetails(response.data);
 
@@ -98,7 +98,7 @@ angular.module('StarWarsApp')
 					}, function(err){
 						callback(err);
 				});
-			}, 
+			},
 
 			getByUrls: function(urls, cb){
 				if(!urls.length){
@@ -107,7 +107,7 @@ angular.module('StarWarsApp')
 					];
 					return cb && cb(null, fallback);
 				}
-				
+
 				var urlCalls = urls.map(function(url) {
 					return $http.get(url, {cache:true});
 				});
@@ -123,7 +123,7 @@ angular.module('StarWarsApp')
 						cb(err);
 					}
 				);
-			}, 
+			},
 
 			getNumberOfPages: function(){
 				return totalSpeciesPages;

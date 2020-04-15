@@ -60,34 +60,34 @@ angular.module('StarWarsApp')
 		var getRomanNumeral = function(number){
 			var numeral;
 			switch(number){
-				case 1: 
+				case 1:
 				numeral = 'I';
 				break;
-				case 2: 
+				case 2:
 				numeral = 'II';
 				break;
-				case 3: 
+				case 3:
 				numeral = 'III';
 				break;
-				case 4: 
+				case 4:
 				numeral = 'IV';
 				break;
-				case 5: 
+				case 5:
 				numeral = 'V';
 				break;
-				case 6: 
+				case 6:
 				numeral = 'VI';
 				break;
-				case 7: 
+				case 7:
 				numeral = 'VII';
 				break;
-				case 8: 
+				case 8:
 				numeral = 'VIII';
 				break;
-				case 9: 
+				case 9:
 				numeral = 'IX';
 				break;
-				case 10: 
+				case 10:
 				numeral = 'X';
 				break;
 			}
@@ -96,7 +96,7 @@ angular.module('StarWarsApp')
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('//swapi.co/api/films/?page=' + page, {cache:true})
+				$http.get('//swapi.dev/api/films/?page=' + page, {cache:true})
 					.then(function(response) {
 						//console.log(response);
 						var filmResponse = response.data.results;
@@ -119,7 +119,7 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('//swapi.co/api/films/' + id +'/', {cache:true})
+				$http.get('//swapi.dev/api/films/' + id +'/', {cache:true})
 					.then(function(response){
 						var film = formatFilmDetails(response.data);
 
@@ -149,7 +149,7 @@ angular.module('StarWarsApp')
 						cb(err);
 					}
 				);
-			},  
+			},
 
 			getNumberOfPages: function(){
 				return totalFilmPages;

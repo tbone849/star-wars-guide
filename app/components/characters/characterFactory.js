@@ -69,13 +69,13 @@ angular.module('StarWarsApp')
 			strippedUrls = urls.map(function(url){
 				return url.replace(/.*?:/g, "");
 			});
-			
+
 			return strippedUrls;
 		};
 
 		return {
 			getAll: function(page, callback)	{
-				$http.get('//swapi.co/api/people/?page=' + page, {cache:true})
+				$http.get('//swapi.dev/api/people/?page=' + page, {cache:true})
 					.then(function(response) {
 						var peopleResponse = response.data.results;
 						var newPeople = [];
@@ -97,10 +97,10 @@ angular.module('StarWarsApp')
 			},
 
 			getById: function(id, callback){
-				$http.get('//swapi.co/api/people/' + id +'/', {cache:true})
+				$http.get('//swapi.dev/api/people/' + id +'/', {cache:true})
 					.then(function(response){
 						var person = formatPersonDetails(response.data);
-						
+
 						callback(null, person);
 					}, function(err){
 						callback(err);
@@ -127,7 +127,7 @@ angular.module('StarWarsApp')
 						cb(err);
 					}
 				);
-			}, 
+			},
 
 			getNumberOfPages: function(){
 				return totalCharacterPages;
